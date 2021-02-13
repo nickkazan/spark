@@ -2,14 +2,14 @@ import React from 'react';
 import styled from 'styled-components/native';
 
 const StyledTouchable = styled.TouchableOpacity`
-    background-color: #2a9d8f;
-    align-items: center;
-    width: 75%;
-    justify-content: center;
-    border-radius: 10px;
-    margin-bottom: 50px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+  background-color: #2a9d8f;
+  align-items: center;
+  width: 75%;
+  justify-content: flex-end;
+  border-radius: 10px;
+  margin-bottom: 50px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 `
 
 const StyledText = styled.Text`

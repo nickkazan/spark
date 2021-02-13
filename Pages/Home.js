@@ -6,13 +6,21 @@ import PrimaryButton from '../Components/PrimaryButton';
 
 const StyledContainer = styled.View`
   flex: 10;
+  flex-direction: column;
+  background-color: #fff;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const StyledRowGroups = styled.View`
+  flex: 10;
+  flex-direction: column;
   background-color: #fff;
   align-items: center;
   justify-content: center;
 `
 
 const StyledRow = styled.View`
-  flex: 8;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -20,16 +28,34 @@ const StyledRow = styled.View`
 
 export default function Home() {
   const listOfCategories = [
-    {choiceName: 'Restaurants', 'isActive': false},
-    {choiceName: 'Sports', 'isActive': false},
-    {choiceName: 'Bars', 'isActive': false}
+    [
+      {id: '100', choiceName: 'Restaurants', 'isActive': false},
+      {id: '101', choiceName: 'Sports', 'isActive': false},
+      {id: '102', choiceName: 'Bars', 'isActive': false},
+    ],
+    [
+      {id: '103', choiceName: 'Nature', 'isActive': false},
+      {id: '104', choiceName: 'Site Seeing', 'isActive': false},
+    ]
   ]
   const listOfPrices = [
-    {choiceName: '$', 'isActive': false},
-    {choiceName: '$$', 'isActive': false},
-    {choiceName: '$$$+', 'isActive': false}
+    [
+      {id: '105', choiceName: '$', 'isActive': false},
+      {id: '106', choiceName: '$$', 'isActive': false},
+      {id: '107', choiceName: '$$$+', 'isActive': false}
+    ]
   ]
-  const titles = [['categories', listOfCategories], ['prices', listOfPrices]]
+  const listOfTransportation = [
+    [
+      {id: '108', choiceName: 'Walking', 'isActive': false},
+      {id: '109', choiceName: 'Biking', 'isActive': false},
+      {id: '110', choiceName: 'Bus', 'isActive': false},
+    ],
+    [
+      {id: '111', choiceName: 'Car', 'isActive': false}
+    ]
+  ]
+  const titles = [['categories', listOfCategories], ['prices', listOfPrices], ['transportation', listOfTransportation]]
 
   const [listOfChoices, setListOfChoices] = useState(listOfCategories)
   const [choiceCounter, setChoiceCounter] = useState(0)
@@ -45,10 +71,10 @@ export default function Home() {
     console.log("Final is now: ", finalChoices)
   }, [finalChoices])
 
-  const selectChoice = (index) => {
+  const selectChoice = (rowIndex, itemIndex) => {
     // console.log(listOfChoices)
     var tempListOfChoices = listOfChoices.slice()
-    tempListOfChoices[index].isActive = !tempListOfChoices[index].isActive
+    tempListOfChoices[rowIndex][itemIndex].isActive = !tempListOfChoices[rowIndex][itemIndex].isActive
     setListOfChoices(tempListOfChoices)
   }
 
@@ -56,14 +82,13 @@ export default function Home() {
     console.log("Choice Counter Length: ", choiceCounter)
     if (choiceCounter < titles.length) {
       var choicesWithActiveStatus = []
-      finalListOfChoices.forEach((choice) => {
-        if (choice.isActive) {
-          choicesWithActiveStatus.push(choice.choiceName)
-        }
-      })
-      console.log(choiceCounter)
-      console.log(titles.length)
-      console.log(titles[choiceCounter][0])
+      for (var i = 0; i < finalListOfChoices.length; i++) {
+        finalListOfChoices[i].forEach((choice) => {
+          if (choice.isActive) {
+            choicesWithActiveStatus.push(choice.choiceName)
+          }
+        })
+      }
       var keyName = titles[choiceCounter][0]
   
       setFinalChoices({...finalChoices, [keyName]: choicesWithActiveStatus})
@@ -89,12 +114,20 @@ export default function Home() {
 
   return (
     <StyledContainer>
-      <StyledRow>
-        { listOfChoices.map((item, index) => (
-          <Choice key={index} name={item.choiceName} textStyle={ item.isActive ? activeTextStyle: inactiveTextStyle } style={ item.isActive ? activeChoiceStyle: inactiveChoiceStyle } onPress={() => selectChoice(index)} />
-        )) 
+      <StyledRowGroups>
+        {
+          listOfChoices.map((rowOfItems, rowIndex) => (
+            <StyledRow key={rowIndex.toString()}> 
+              {
+              rowOfItems.map((item, itemIndex) => (
+                <Choice key={item.id} name={item.choiceName} textStyle={ item.isActive ? activeTextStyle: inactiveTextStyle }
+                style={ item.isActive ? activeChoiceStyle: inactiveChoiceStyle } onPress={() => selectChoice(rowIndex, itemIndex)} />
+              ))
+              }
+            </StyledRow>
+          ))
         }
-      </StyledRow>
+      </StyledRowGroups>
       <PrimaryButton text="Next" onPress={() => submitChoices(listOfChoices)}/>
     </StyledContainer>
   )

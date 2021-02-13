@@ -11,6 +11,8 @@ const StyledTouchable = styled.TouchableOpacity`
     padding-bottom: 20px;
     margin-left: 10px;
     margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 `
 
 const StyledText = styled.Text`
