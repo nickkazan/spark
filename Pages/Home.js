@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components/native';
+import React, { useState, useEffect } from '../node_modules/react';
+import styled from '../node_modules/styled-components/native';
 
-import Choice from '../Components/Choice';
-import PrimaryButton from '../Components/PrimaryButton';
+import Choice from '../components/Choice';
+import PrimaryButton from '../components/PrimaryButton';
 
 const StyledContainer = styled.View`
   flex: 10;
@@ -29,30 +29,39 @@ const StyledRow = styled.View`
 export default function Home() {
   const listOfCategories = [
     [
-      {id: '100', choiceName: 'Restaurants', 'isActive': false},
-      {id: '101', choiceName: 'Sports', 'isActive': false},
-      {id: '102', choiceName: 'Bars', 'isActive': false},
+      {id: '1000', choiceName: 'Active', categoryCode: 'active', 'isActive': false},
+      {id: '1001', choiceName: 'Arts', categoryCode: 'arts', 'isActive': false},
+      {id: '1002', choiceName: 'Beauty & Spas', categoryCode: 'beautysvc', 'isActive': false},
     ],
     [
-      {id: '103', choiceName: 'Nature', 'isActive': false},
-      {id: '104', choiceName: 'Site Seeing', 'isActive': false},
+      {id: '1003', choiceName: 'Food Shops', categoryCode: 'food', 'isActive': false},
+      {id: '1004', choiceName: 'Local Flavour', categoryCode: 'localflavor', 'isActive': false},
+      {id: '1005', choiceName: 'Nightlife', categoryCode: 'nightlife', 'isActive': false},
+    ],
+    [
+      {id: '1006', choiceName: 'Restaurants', categoryCode: 'restaurants', 'isActive': false},
+      {id: '1007', choiceName: 'Shopping', categoryCode: 'shopping', 'isActive': false},
     ]
   ]
   const listOfPrices = [
     [
-      {id: '105', choiceName: '$', 'isActive': false},
-      {id: '106', choiceName: '$$', 'isActive': false},
-      {id: '107', choiceName: '$$$+', 'isActive': false}
+      {id: '2000', choiceName: '$', categoryCode: '1', 'isActive': false},
+      {id: '2001', choiceName: '$$', categoryCode: '2', 'isActive': false},
+      {id: '2002', choiceName: '$$$', categoryCode: '3', 'isActive': false}
+    ],
+    [
+      {id: '2003', choiceName: '$$$$', categoryCode: '4', 'isActive': false},
     ]
   ]
   const listOfTransportation = [
     [
-      {id: '108', choiceName: 'Walking', 'isActive': false},
-      {id: '109', choiceName: 'Biking', 'isActive': false},
-      {id: '110', choiceName: 'Bus', 'isActive': false},
+      {id: '3000', choiceName: 'Walking', categoryCode: 2000, 'isActive': false},
+      {id: '3001', choiceName: 'Bus', categoryCode: 15000, 'isActive': false},
+      {id: '3002', choiceName: 'Biking', categoryCode: 8000, 'isActive': false}
     ],
     [
-      {id: '111', choiceName: 'Car', 'isActive': false}
+      {id: '3003', choiceName: 'Uber', categoryCode: 15000, 'isActive': false},
+      {id: '3004', choiceName: 'Car', categoryCode: 40000, 'isActive': false}
     ]
   ]
   const titles = [['categories', listOfCategories], ['prices', listOfPrices], ['transportation', listOfTransportation]]
@@ -72,7 +81,6 @@ export default function Home() {
   }, [finalChoices])
 
   const selectChoice = (rowIndex, itemIndex) => {
-    // console.log(listOfChoices)
     var tempListOfChoices = listOfChoices.slice()
     tempListOfChoices[rowIndex][itemIndex].isActive = !tempListOfChoices[rowIndex][itemIndex].isActive
     setListOfChoices(tempListOfChoices)
@@ -85,7 +93,7 @@ export default function Home() {
       for (var i = 0; i < finalListOfChoices.length; i++) {
         finalListOfChoices[i].forEach((choice) => {
           if (choice.isActive) {
-            choicesWithActiveStatus.push(choice.choiceName)
+            choicesWithActiveStatus.push(choice.categoryCode)
           }
         })
       }
@@ -94,7 +102,26 @@ export default function Home() {
       setFinalChoices({...finalChoices, [keyName]: choicesWithActiveStatus})
       setChoiceCounter(choiceCounter + 1)
     } else {
+      // We hit all of the pages, time to call API
       console.log("Our Choice Counter is passed the limit.")
+      const data = JSON.stringify(finalChoices)
+      console.log("DATA: ", data)
+
+      fetch('http://192.168.1.5:8080/resulting-activities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },      
+        body: data
+      })
+      .then((response) => {
+        // console.log(response.body)
+        // console.log(JSON.stringify(response))
+      })
+      .catch((error) => {
+        console.error(error)
+      });
+
     }
   }
 

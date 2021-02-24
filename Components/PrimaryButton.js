@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components/native';
+import React from '../node_modules/react';
+import styled from '../node_modules/styled-components/native';
 
 const StyledTouchable = styled.TouchableOpacity`
   background-color: #2a9d8f;

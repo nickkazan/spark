@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components/native';
+import React from '../node_modules/react';
+import styled from '../node_modules/styled-components/native';
 
 const StyledTouchable = styled.TouchableOpacity`
     flex: 1;
@@ -9,10 +9,10 @@ const StyledTouchable = styled.TouchableOpacity`
     border-radius: 10px;
     padding-top: 20px;
     padding-bottom: 20px;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 `
 
 const StyledText = styled.Text`
