@@ -9,5 +9,8 @@ npm-debug.*
 *.orig.*
 web-build/
 
+# Secret Keys and Such
+*.env
+
 # macOS
 .DS_Store
