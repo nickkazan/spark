@@ -26,7 +26,7 @@ const StyledRow = styled.View`
   align-items: center;
 `
 
-export default function Home() {
+export default function Home({navigation}) {
   const listOfCategories = [
     [
       {id: '1000', choiceName: 'Active', categoryCode: 'active', 'isActive': false},
@@ -115,8 +115,10 @@ export default function Home() {
         body: data
       })
       .then((response) => {
-        // console.log(response.body)
-        // console.log(JSON.stringify(response))
+        response.json().then((data) => {
+          console.log(data);
+          navigation.navigate('Results', { data: data.businesses })
+        });
       })
       .catch((error) => {
         console.error(error)

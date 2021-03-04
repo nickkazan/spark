@@ -33,11 +33,11 @@ app.post("/resulting-activities", (req, res) => {
   })
   .then((response) => {
     console.log(response.data)
+    res.send(JSON.stringify(response.data))
   })
   .catch((err) => {
     console.error(err.response)
   })
-  res.send("Hello world");
 });
 
 app.listen(PORT, () => {
