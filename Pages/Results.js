@@ -45,8 +45,6 @@ export default function Home({navigation, route}) {
         keyExtractor={item => item.id}
       />
     </SafeAreaView>
-      {/* <ResultingItem name='Hot Dog Man' price='$$$' rating='4.5' review_count='113' 
-      is_closed='false' address='123 AppleBlock Crescent' /> */}
     </StyledContainer>
   )
 }
