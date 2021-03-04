@@ -6,6 +6,8 @@ import PrimaryButton from '../components/PrimaryButton';
 
 const StyledContainer = styled.View`
   flex: 10;
+  padding-top: 50px;
+  padding-bottom: 50px;
   flex-direction: column;
   background-color: #fff;
   align-items: center;
@@ -24,6 +26,12 @@ const StyledRow = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+`
+
+const StyledMessage = styled.Text`
+  font-family: 'Avenir';
+  font-size: 28px;
+  text-align: center;
 `
 
 export default function Home({navigation}) {
@@ -64,7 +72,11 @@ export default function Home({navigation}) {
       {id: '3004', choiceName: 'Car', categoryCode: 40000, 'isActive': false}
     ]
   ]
-  const titles = [['categories', listOfCategories], ['prices', listOfPrices], ['transportation', listOfTransportation]]
+  const titles = [
+    ['categories', listOfCategories, "Which activities are you looking to do?"],
+    ['prices', listOfPrices, "What prices are you willing to pay?"],
+    ['transportation', listOfTransportation, "How are you able to commute?"]
+  ]
 
   const [listOfChoices, setListOfChoices] = useState(listOfCategories)
   const [choiceCounter, setChoiceCounter] = useState(0)
@@ -143,6 +155,9 @@ export default function Home({navigation}) {
 
   return (
     <StyledContainer>
+      <StyledMessage>
+        {choiceCounter < titles.length ? titles[choiceCounter][2] : null}
+      </StyledMessage>
       <StyledRowGroups>
         {
           listOfChoices.map((rowOfItems, rowIndex) => (
