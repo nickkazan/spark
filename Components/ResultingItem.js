@@ -46,7 +46,6 @@ const StyledImage = styled.Image`
   margin-right: 10px;
   border-radius: 10px;
   border-color: black;
-  border-width: 1px;
 `
 
 const StyledTitle = styled.Text`
@@ -73,7 +72,7 @@ export default function Choice(props) {
   console.log(props)
   return (
     <StyledTouchable onPress={props.onPress} style={props.style}>
-      <StyledImage />
+      <StyledImage source={{uri: props.image}} />
       <StyledInformation>
         <StyledNameAndAddress>
           <StyledTitle style={props.textStyle}>

@@ -119,7 +119,7 @@ export default function Home({navigation}) {
       const data = JSON.stringify(finalChoices)
       console.log("DATA: ", data)
 
-      fetch('http://192.168.1.5:8080/resulting-activities', {
+      fetch('http://192.168.1.17:8080/resulting-activities', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

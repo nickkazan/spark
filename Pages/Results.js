@@ -3,6 +3,7 @@ import React, { useState, useEffect } from '../node_modules/react'
 import styled from '../node_modules/styled-components/native'
 
 import ResultingItem from '../components/ResultingItem'
+import ChosenItem from '../pages/ChosenItem'
 
 const StyledContainer = styled.View`
   flex: 10;
@@ -26,8 +27,15 @@ const StyledRow = styled.View`
   align-items: center;
 `
 
-export default function Home({navigation, route}) {
+export default function Results({ navigation, route }) {
   console.log("MADE IT: ", route.params.data[0])
+
+
+  const selectItem = (itemData) => {
+    navigation.navigate('ChosenItem', { data: itemData }) 
+  }
+
+
   return (
     <StyledContainer>
       <SafeAreaView>
@@ -37,9 +45,11 @@ export default function Home({navigation, route}) {
           <ResultingItem
             name={item.name}
             price={item.price}
+            image={item.image_url}
             rating={item.rating.toString()}
             review_count={item.review_count.toString()}
             address={item.location.address1}
+            onPress={() => selectItem(item)}
           />
         )}
         keyExtractor={item => item.id}
