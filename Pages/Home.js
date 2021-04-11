@@ -163,10 +163,10 @@ export default function Home({navigation}) {
           listOfChoices.map((rowOfItems, rowIndex) => (
             <StyledRow key={rowIndex.toString()}> 
               {
-              rowOfItems.map((item, itemIndex) => (
-                <Choice key={item.id} name={item.choiceName} textStyle={ item.isActive ? activeTextStyle: inactiveTextStyle }
-                style={ item.isActive ? activeChoiceStyle: inactiveChoiceStyle } onPress={() => selectChoice(rowIndex, itemIndex)} />
-              ))
+                rowOfItems.map((item, itemIndex) => (
+                  <Choice key={item.id} name={item.choiceName} textStyle={ item.isActive ? activeTextStyle: inactiveTextStyle }
+                  style={ item.isActive ? activeChoiceStyle: inactiveChoiceStyle } onPress={() => selectChoice(rowIndex, itemIndex)} />
+                ))
               }
             </StyledRow>
           ))
