@@ -83,13 +83,15 @@ export default function Home({navigation}) {
   const [finalChoices, setFinalChoices] = useState({})
 
   useEffect(() => {
-    if (choiceCounter < titles.length) {
+    if (choiceCounter === titles.length) {
+      setListOfChoices([])
+    } else if (choiceCounter < titles.length) {
       setListOfChoices(titles[choiceCounter][1])
     }
   }, [choiceCounter])
 
   useEffect(() => {
-    console.log("Final is now: ", finalChoices)
+    // console.log("Final is now: ", finalChoices)
   }, [finalChoices])
 
   const selectChoice = (rowIndex, itemIndex) => {
@@ -156,7 +158,7 @@ export default function Home({navigation}) {
   return (
     <StyledContainer>
       <StyledMessage>
-        {choiceCounter < titles.length ? titles[choiceCounter][2] : null}
+        {choiceCounter < titles.length ? titles[choiceCounter][2] : "Ready to see your options?"}
       </StyledMessage>
       <StyledRowGroups>
         {
@@ -172,7 +174,7 @@ export default function Home({navigation}) {
           ))
         }
       </StyledRowGroups>
-      <PrimaryButton text="Next" onPress={() => submitChoices(listOfChoices)}/>
+      <PrimaryButton text={choiceCounter < titles.length ? "Next" : "Yes!"} onPress={() => submitChoices(listOfChoices)}/>
     </StyledContainer>
   )
 }
