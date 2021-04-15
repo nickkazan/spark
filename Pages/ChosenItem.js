@@ -66,6 +66,7 @@ export default function ChosenItem({navigation, route}) {
         Linking.openURL(data.url);
       } else {
         console.log("Don't know how to open URI: " + data.url);
+        alert("Website is not available.")
       }
     });
   };
@@ -76,6 +77,7 @@ export default function ChosenItem({navigation, route}) {
         Linking.openURL(`tel:${data.phone}`);
       } else {
         console.log("Don't know how to open URI: " + data.phone);
+        alert("Phone is not available.")
       }
     });
   };

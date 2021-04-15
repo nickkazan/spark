@@ -2,7 +2,8 @@ import React from '../node_modules/react';
 import styled from '../node_modules/styled-components/native';
 
 const StyledTouchable = styled.TouchableOpacity`
-    flex: 1;
+    /* flex: 1; */
+    width: 125px;
     background-color: #fff;
     align-items: center;
     justify-content: center;

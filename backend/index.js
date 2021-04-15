@@ -12,18 +12,24 @@ app.use(express.json());
 
 app.post("/resulting-activities", (req, res) => {
   const body = req.body
-  console.log(body)
+  let open = false
+  console.log("BODY BEFORE API: ", body)
+  if (body.availability.length === 1) {
+    open = body.availability[0]
+  }
+
   const rawParams = {
-    'location': '219 Clarence Street, Ottawa, ON K1N 5R2', // MUST BE USER DETERMINED
+    'longitude': parseFloat(body.longitude),
+    'latitude': parseFloat(body.latitude),
     'radius': Math.max(...body.transportation),
     'categories': body.categories.toString(),
     'limit': 5,
     'price': body.prices.toString(),
-    'open_now': true // MUST BE USER DETERMINED
+    'open_now': open
   }
+  console.log(rawParams.open_now)
 
   var params = new URLSearchParams(rawParams)
-  console.log(params)
 
   axios.get(URL + "?" + params, {
     headers: {

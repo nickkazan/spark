@@ -15,17 +15,13 @@ const StyledContainer = styled.View`
 `
 
 const StyledRowGroups = styled.View`
-  flex: 10;
   flex-direction: column;
   background-color: #fff;
   align-items: center;
-  justify-content: center;
 `
 
 const StyledRow = styled.View`
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
 `
 
 const StyledMessage = styled.Text`
@@ -64,23 +60,41 @@ export default function Home({navigation}) {
   const listOfTransportation = [
     [
       {id: '3000', choiceName: 'Walking', categoryCode: 2000, 'isActive': false},
-      {id: '3001', choiceName: 'Bus', categoryCode: 15000, 'isActive': false},
-      {id: '3002', choiceName: 'Biking', categoryCode: 8000, 'isActive': false}
+      {id: '3001', choiceName: 'Bus', categoryCode: 10000, 'isActive': false},
+      {id: '3002', choiceName: 'Biking', categoryCode: 5000, 'isActive': false}
     ],
     [
       {id: '3003', choiceName: 'Uber', categoryCode: 15000, 'isActive': false},
       {id: '3004', choiceName: 'Car', categoryCode: 40000, 'isActive': false}
     ]
   ]
+  const listOfAvailability = [
+    [
+      {id: '4000', choiceName: 'Yes', categoryCode: true, 'isActive': false},
+      {id: '4001', choiceName: 'No', categoryCode: false, 'isActive': false},
+    ]
+  ]
   const titles = [
     ['categories', listOfCategories, "Which activities are you looking to do?"],
     ['prices', listOfPrices, "What prices are you willing to pay?"],
-    ['transportation', listOfTransportation, "How are you able to commute?"]
+    ['transportation', listOfTransportation, "How are you able to commute?"],
+    ['availability', listOfAvailability, "Does the activity need to be open right now?"]
   ]
 
   const [listOfChoices, setListOfChoices] = useState(listOfCategories)
   const [choiceCounter, setChoiceCounter] = useState(0)
   const [finalChoices, setFinalChoices] = useState({})
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        console.log("HIT")
+        setFinalChoices({...finalChoices, longitude: position.coords.longitude, latitude: position.coords.latitude})
+      },
+      error => alert(error.message),
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 100000 }
+    );
+  }, [])
 
   useEffect(() => {
     if (choiceCounter === titles.length) {
@@ -91,7 +105,7 @@ export default function Home({navigation}) {
   }, [choiceCounter])
 
   useEffect(() => {
-    // console.log("Final is now: ", finalChoices)
+    console.log("Final is now: ", finalChoices)
   }, [finalChoices])
 
   const selectChoice = (rowIndex, itemIndex) => {
@@ -120,7 +134,7 @@ export default function Home({navigation}) {
       console.log("Our Choice Counter is passed the limit.")
       const data = JSON.stringify(finalChoices)
       console.log("DATA: ", data)
-
+      
       fetch('http://192.168.1.17:8080/resulting-activities', {
         method: 'POST',
         headers: {
