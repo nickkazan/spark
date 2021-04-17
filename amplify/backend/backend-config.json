@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "spark20a70156": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}
