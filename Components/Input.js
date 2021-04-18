@@ -10,7 +10,7 @@ const StyledContainer = styled.View`
   width: 75%;
   justify-content: center;
   border-radius: 10px;
-  margin-bottom: 50px;
+  margin-bottom: 25px;
   padding-left: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -20,6 +20,12 @@ const StyledText = styled.Text`
   font-family: 'Avenir';
   font-size: 18px;
   color: black;
+`
+const StyledErrorText = styled.Text`
+  font-family: 'Avenir';
+  font-size: 18px;
+  align-self: flex-end;
+  color: red;
 `
 const StyledTextInput = styled.TextInput`
   width: 100%;
@@ -43,6 +49,9 @@ export default function Input(props) {
         style={{borderBottomColor: props.error ? "red" : "black"}}
         secureTextEntry={props.secure}
       />
+      {props.error && (
+        <StyledErrorText>{props.error}</StyledErrorText>
+      )}
     </StyledContainer>
   )
 }

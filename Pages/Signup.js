@@ -5,15 +5,14 @@ import { Auth } from "aws-amplify";
 
 import PrimaryButton from "../components/PrimaryButton";
 import Input from "../components/Input";
-import Signin from "../pages/Signin";
 
 const StyledText = styled.Text`
-  padding-left: 16;
-  padding-right: 16;
-  padding-top: 16;
-  padding-bottom: 16;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   font-family: "Avenir";
-  font-size: 18;
+  font-size: 18px;
   color: black;
 `
 const StyledActions = styled.View`
@@ -22,8 +21,8 @@ const StyledActions = styled.View`
   width: 100%;
   align-items: center;
   justify-content: center;
-  padding-left: 16;
-  padding-right: 16;
+  padding-left: 16px;
+  padding-right: 16px;
 `
 
 
@@ -51,11 +50,10 @@ export default function Signup({ props, navigation, login }) {
     }
   };
 
-
   const inputIsValid = () =>
-    username !== "" && password !== "" && password.length >= 8
-      ? email !== "" && !emailIsInvalid()
-      : true;
+    username !== "" && password !== "" && !passwordIsInvalid() && email !== "" && !emailIsInvalid()
+      ? true
+      : false
 
   const emailIsInvalid = () => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -70,6 +68,15 @@ export default function Signup({ props, navigation, login }) {
 
     return false;
   };
+
+  const passwordIsInvalid = () => {
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\^$*.\[\]{}\(\)?\-“!@#%&\/,><\’:;|_~`])\S{8,99}$/;
+
+    if (!re.test(password)) {
+      return true
+    }
+    return false
+  }
 
   return (
     <>
@@ -91,7 +98,9 @@ export default function Signup({ props, navigation, login }) {
               username.trim() === ""
                 ? "mandatory field"
                 : username.trim().includes(" ")
-                ? "username contains invalid characters"
+                ? "invalid characters"
+                : username.length < 2
+                ? "too short"
                 : false
             }
             onChangeText={(val) => setUsername(val)}
@@ -104,9 +113,11 @@ export default function Signup({ props, navigation, login }) {
               password.trim() === ""
                 ? "mandatory field"
                 : password.trim().includes(" ")
-                ? "password contains invalid characters"
+                ? "invalid characters"
                 : password.length < 8
-                ? "password is too short"
+                ? "too short"
+                : passwordIsInvalid()
+                ? "needs a special character, number, lowercase and capital letter"
                 : false
             }
             onChangeText={(val) => setPassword(val)}
