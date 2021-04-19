@@ -1,6 +1,5 @@
 import React from '../node_modules/react';
 import styled from '../node_modules/styled-components/native';
-import { StyleSheet, TextInput, Text } from "react-native";
 
 
 const StyledContainer = styled.View`
@@ -46,6 +45,7 @@ export default function Input(props) {
         value={props.value}
         placeholder={props.placeholder}
         keyboardType={props.keyboardType}
+        returnKeyType={props.returnKeyType}
         style={{borderBottomColor: props.error ? "red" : "black"}}
         secureTextEntry={props.secure}
       />

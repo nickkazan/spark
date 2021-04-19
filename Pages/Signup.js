@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import styled from '../node_modules/styled-components/native';
-import { StyleSheet, View, Text } from "react-native";
+import { View } from "react-native";
 import { Auth } from "aws-amplify";
 
 import PrimaryButton from "../components/PrimaryButton";
 import Input from "../components/Input";
+import ConfirmSignup from "./ConfirmSignup";
 
 const StyledText = styled.Text`
   padding-left: 16px;
@@ -26,15 +27,18 @@ const StyledActions = styled.View`
 `
 
 
-export default function Signup({ props, navigation, login }) {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function Signup({ props, navigation }) {
+  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [code, setCode] = useState("")
+  const [confirmSignupPage, setConfirmSignupPage] = useState(false)
+
 
   const handleSignupAttempt = async (email, username, password) => {
-    const clearEmail = email.trim();
-    const clearUsername = username.trim();
-    const clearPassword = password.trim();
+    const clearEmail = email.trim()
+    const clearUsername = username.trim()
+    const clearPassword = password.trim()
 
     try {
       await Auth.signUp({
@@ -45,10 +49,10 @@ export default function Signup({ props, navigation, login }) {
         },
       });
     } catch (err) {
-      console.log("sign up err: ", err);
+      console.log("sign up err: ", err)
       alert(err)
     }
-  };
+  }
 
   const inputIsValid = () =>
     username !== "" && password !== "" && !passwordIsInvalid() && email !== "" && !emailIsInvalid()
@@ -67,7 +71,7 @@ export default function Signup({ props, navigation, login }) {
     }
 
     return false;
-  };
+  }
 
   const passwordIsInvalid = () => {
     const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\^$*.\[\]{}\(\)?\-“!@#%&\/,><\’:;|_~`])\S{8,99}$/;
@@ -78,10 +82,34 @@ export default function Signup({ props, navigation, login }) {
     return false
   }
 
+  const confirmSignUp = async (username, code) => {
+    try {
+      await Auth.confirmSignUp(username, code);
+    } catch (error) {
+      console.log("error confirming sign up", error);
+    }
+  };
+
+  const handleSignIn = async (username, password) => {
+    try {
+      await Auth.signIn(username, password);
+    } catch (error) {
+      console.log("error signing in", error);
+    }
+  };
+
+  const handleConfirm = async () => {
+    await confirmSignUp(username, code);
+    await handleSignIn(username, password);
+    navigation.navigate("Home");
+  };
+
+  const handleCode = (val) => setCode(val);
+
   return (
-    <>
-      <View >
-        <View >
+      <View>
+        {!confirmSignupPage ?
+        <View>
           <StyledText style={{alignSelf: "center", paddingTop: 30, paddingBottom: 30, fontSize: 24}}>
             Welcome to Spark
           </StyledText>
@@ -135,12 +163,23 @@ export default function Signup({ props, navigation, login }) {
                 disabled={!inputIsValid()}
                 onPress={async () => {
                   await handleSignupAttempt(email, username, password);
+                  setConfirmSignupPage(true);
                 }}
-              />
+            />
             </>
           </StyledActions>
         </View>
+        :
+        <View>
+          <ConfirmSignup
+            code={code}
+            email={email}
+            handleConfirm={handleConfirm}
+            handleCode={handleCode}
+            handleCancel={() => setConfirmSignupPage(false)}
+          />
+        </View>
+        }
       </View>
-    </>
   );
 };
