@@ -26,48 +26,16 @@ const StyledActions = styled.View`
 `
 
 
-export default function Signup({ props, navigation, login }) {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function Signin({ navigation }) {
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [unknownLogin, setUnknownLogin] = useState(false)
 
-  const handleSignupAttempt = async (email, username, password) => {
-    const clearEmail = email.trim();
-    const clearUsername = username.trim();
-    const clearPassword = password.trim();
-
-    try {
-      await Auth.signUp({
-        username: clearUsername,
-        password: clearPassword,
-        attributes: {
-          email: clearEmail,
-        },
-      });
-    } catch (err) {
-      console.log("sign up err: ", err);
-      alert(err)
-    }
-  };
 
   const inputIsValid = () =>
-    username !== "" && password !== "" && !passwordIsInvalid() && email !== "" && !emailIsInvalid()
+    username !== "" && password !== "" && !passwordIsInvalid()
       ? true
       : false
-
-  const emailIsInvalid = () => {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    if (email.trim() === "") {
-      return "mandatory field";
-    }
-
-    if (!re.test(email)) {
-      return "invalid email";
-    }
-
-    return false;
-  };
 
   const passwordIsInvalid = () => {
     const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\^$*.\[\]{}\(\)?\-“!@#%&\/,><\’:;|_~`])\S{8,99}$/;
@@ -78,19 +46,32 @@ export default function Signup({ props, navigation, login }) {
     return false
   }
 
+  const handleSignIn = async (username, password) => {
+    try {
+      await Auth.signIn(username, password)
+      navigation.navigate("Home")
+    } catch (error) {
+      console.log("error signing in", error)
+      setUnknownLogin(true)
+    }
+  };
+
+  const handleUsernameOnChange = (val) => {
+    setUsername(val)
+    setUnknownLogin(false)
+  }
+
+  const handlePasswordOnChange = (val) => {
+    setPassword(val)
+    setUnknownLogin(false)
+  }
+
   return (
-    <>
-      <View >
-        <View >
+      <View>
+        <View>
           <StyledText style={{alignSelf: "center", paddingTop: 30, paddingBottom: 30, fontSize: 24}}>
-            Welcome to Spark
+            Welcome back to Spark
           </StyledText>
-          <Input
-            label="email"
-            error={emailIsInvalid()}
-            value={email}
-            onChangeText={(val) => setEmail(val)}
-          />
           <Input
             label="username"
             value={username}
@@ -101,9 +82,11 @@ export default function Signup({ props, navigation, login }) {
                 ? "invalid characters"
                 : username.length < 2
                 ? "too short"
+                : unknownLogin === true
+                ? "login doesn't exist"
                 : false
             }
-            onChangeText={(val) => setUsername(val)}
+            onChangeText={(val) => handleUsernameOnChange(val)}
           />
           <Input
             secure={true}
@@ -118,6 +101,8 @@ export default function Signup({ props, navigation, login }) {
                 ? "too short"
                 : passwordIsInvalid()
                 ? "needs a special character, number, lowercase and capital letter"
+                : unknownLogin === true
+                ? "login doesn't exist"
                 : false
             }
             onChangeText={(val) => setPassword(val)}
@@ -125,22 +110,19 @@ export default function Signup({ props, navigation, login }) {
           <StyledActions>
             <>
               <StyledText
-                onPress={() => navigation.navigate('Signin')}
+                onPress={() => navigation.navigate('Signup')}
                 style={{color: "#2a9d8f"}}
               >
-                I have an account
+                I'm new here
               </StyledText>
               <PrimaryButton
-                text="register"
+                text="login"
                 disabled={!inputIsValid()}
-                onPress={async () => {
-                  await handleSignupAttempt(email, username, password);
-                }}
+                onPress={ async () => { await handleSignIn(username, password) } }
               />
             </>
           </StyledActions>
         </View>
       </View>
-    </>
   );
 };
