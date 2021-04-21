@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from '../node_modules/styled-components/native';
 import { View } from "react-native";
 import { Auth } from "aws-amplify";
+import AuthContext from '../context/auth-context.js'
 
 import PrimaryButton from "../components/PrimaryButton";
 import Input from "../components/Input";
@@ -33,6 +34,7 @@ export default function Signup({ props, navigation }) {
   const [password, setPassword] = useState("")
   const [code, setCode] = useState("")
   const [confirmSignupPage, setConfirmSignupPage] = useState(false)
+  const { signUp } = useContext(AuthContext);
 
 
   const handleSignupAttempt = async (email, username, password) => {
@@ -84,27 +86,27 @@ export default function Signup({ props, navigation }) {
 
   const confirmSignUp = async (username, code) => {
     try {
-      await Auth.confirmSignUp(username, code);
+      await Auth.confirmSignUp(username, code)
     } catch (error) {
-      console.log("error confirming sign up", error);
+      console.log("error confirming sign up", error)
     }
   };
 
   const handleSignIn = async (username, password) => {
     try {
-      await Auth.signIn(username, password);
+      await Auth.signIn(username, password)
     } catch (error) {
-      console.log("error signing in", error);
+      console.log("error signing in", error)
     }
   };
 
   const handleConfirm = async () => {
-    await confirmSignUp(username, code);
-    await handleSignIn(username, password);
-    navigation.navigate("Home");
+    await confirmSignUp(username, code)
+    await handleSignIn(username, password)
+    signUp()
   };
 
-  const handleCode = (val) => setCode(val);
+  const handleCode = (val) => setCode(val)
 
   return (
       <View>
