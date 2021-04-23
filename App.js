@@ -1,19 +1,17 @@
 import React, { useReducer, useEffect, useMemo } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
 import Amplify, { Auth } from 'aws-amplify'
 import awsconfig from './src/aws-exports'
 import * as SecureStore from 'expo-secure-store';
 import AuthContext from './context/auth-context.js'
 
-import Signup from "./pages/Signup"
-import Signin from "./pages/Signin"
 import Home from './pages/Home'
 import Results from './pages/Results'
 import ChosenItem from './pages/ChosenItem'
+import NavTab from './navigation/NavTab'
+import AuthenticationStack from './navigation/AuthenticationStack'
 
 Amplify.configure(awsconfig)
-const Stack = createStackNavigator()
 
 export default function App() {
 
@@ -103,20 +101,11 @@ export default function App() {
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
-        <Stack.Navigator>
           { state.isSignedIn === true ? (
-            <>
-              <Stack.Screen name="Home" component={Home} />
-              <Stack.Screen name="Results" component={Results} />
-              <Stack.Screen name="ChosenItem" component={ChosenItem} />
-            </>
+              <NavTab/>
           ) : (
-            <>
-              <Stack.Screen name="Signup" component={Signup} />
-              <Stack.Screen name="Signin" component={Signin} />
-            </>
+            <AuthenticationStack/>
           ) }
-        </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
   );

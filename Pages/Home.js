@@ -22,12 +22,16 @@ const StyledRowGroups = styled.View`
 
 const StyledRow = styled.View`
   flex-direction: row;
+  padding-left: 10px;
+  padding-right: 10px;
 `
 
 const StyledMessage = styled.Text`
   font-family: 'Avenir';
   font-size: 28px;
   text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
 `
 
 export default function Home({navigation}) {
@@ -88,7 +92,6 @@ export default function Home({navigation}) {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       position => {
-        console.log("HIT")
         setFinalChoices({...finalChoices, longitude: position.coords.longitude, latitude: position.coords.latitude})
       },
       error => alert(error.message),
