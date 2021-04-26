@@ -70,15 +70,17 @@ export default function App() {
       signIn: async () => {
         const currentUser = await Auth.currentAuthenticatedUser()
         const userData = currentUser.signInUserSession.idToken.payload
-        
+
         // There are more params that can be grabbed but these are the only useful ones for now
+        const firstName = userData['given_name']
+        const lastName = userData['family_name']
         const email = userData['email']
         const username = userData['cognito:username']
         const userToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
 
         await SecureStore.setItemAsync('userToken', userToken)
-        await SecureStore.setItemAsync('userData', JSON.stringify({email, username}))
-        dispatch({ type: 'SIGN_IN', token: userToken, userData: {email, username} });
+        await SecureStore.setItemAsync('userData', JSON.stringify({firstName, lastName, email, username}))
+        dispatch({ type: 'SIGN_IN', token: userToken, userData: {firstName, lastName, email, username} });
       },
       signOut: () => dispatch({ type: 'SIGN_OUT' }),
       signUp: async () => {
@@ -86,13 +88,24 @@ export default function App() {
         const userData = currentUser.signInUserSession.idToken.payload
         
         // There are more params that can be grabbed but these are the only useful ones for now
+        const firstName = userData['given_name']
+        const lastName = userData['family_name']
         const email = userData['email']
         const username = userData['cognito:username']
         const userToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
 
         await SecureStore.setItemAsync('userToken', userToken)
-        await SecureStore.setItemAsync('userData', JSON.stringify({email, username}))
-        dispatch({ type: 'SIGN_IN', token: userToken, userData: {email, username} });
+        await SecureStore.setItemAsync('userData', JSON.stringify({firstName, lastName, email, username}))
+        dispatch({ type: 'SIGN_IN', token: userToken, userData: {firstName, lastName, email, username} });
+      },
+      getUserData: async () => {
+        let userData
+        try {
+          userData = await SecureStore.getItemAsync('userData');
+        } catch (e) {
+          console.log("failed to find user data locally")
+        }
+        return userData
       },
     }),
     []

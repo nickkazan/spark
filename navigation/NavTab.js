@@ -1,14 +1,11 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeStack from '../navigation/HomeStack';
-// import Profile from '../pages/Profile';
-import Results from '../pages/Results';
+import ProfileStack from '../navigation/ProfileStack';
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
 
 export default function NavTab() {
   return (
@@ -17,7 +14,14 @@ export default function NavTab() {
       tabBarOptions={{
         activeTintColor: '#2a9d8f',
         showLabel: false,
-        style: { height: 50 }
+        tabStyle: {
+          width: 100
+        },
+        iconStyle: {
+          width: 35,
+          height: 60
+        },
+        style: { height: 50 },
       }}
     >
       <Tab.Screen
@@ -25,22 +29,34 @@ export default function NavTab() {
         component={HomeStack}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="home" color={color} size={35} />
           ),
         }}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Profile"
-        component={Home}
+        component={ProfileStack}
         options={{
           tabBarLabel: 'Profile',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="magnify" color={color} size={35} />
+          ),
+          // tabBarBadge: 3,
+        }}
+      />
+      <Tab.Screen
+        name="Test"
+        component={ProfileStack}
+        options={{
+          tabBarLabel: 'Test',
+          tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="face-profile" color={color} size={35} />
           ),
           // tabBarBadge: 3,
         }}
-      /> */}
+      />
+
     </Tab.Navigator>
   );
 }

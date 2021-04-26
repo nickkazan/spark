@@ -10,7 +10,6 @@ import Input from "../components/Input";
 const StyledText = styled.Text`
   padding-left: 16px;
   padding-right: 16px;
-  padding-top: 16px;
   padding-bottom: 16px;
   font-family: "Avenir";
   font-size: 18px;

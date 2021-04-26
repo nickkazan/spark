@@ -9,11 +9,10 @@ const StyledContainer = styled.View`
   width: 75%;
   justify-content: center;
   border-radius: 10px;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   padding-left: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
   padding-right: 10px;
+  padding-bottom: 10px;
 `
 const StyledText = styled.Text`
   font-family: 'Avenir';
@@ -26,9 +25,14 @@ const StyledErrorText = styled.Text`
   align-self: flex-end;
   color: red;
 `
+const StyledSuccessText = styled.Text`
+  font-family: 'Avenir';
+  font-size: 18px;
+  align-self: flex-end;
+  color: green;
+`
 const StyledTextInput = styled.TextInput`
   width: 100%;
-  height: 35px;
   border-bottom-color: black;
   border-bottom-width: 1px;
   font-family: 'Avenir';
@@ -46,12 +50,15 @@ export default function Input(props) {
         placeholder={props.placeholder}
         keyboardType={props.keyboardType}
         returnKeyType={props.returnKeyType}
-        style={{borderBottomColor: props.error ? "red" : "black"}}
+        style={{borderBottomColor: props.error ? "red" : "green"}}
         secureTextEntry={props.secure}
       />
-      {props.error && (
+      {props.error ? (
         <StyledErrorText>{props.error}</StyledErrorText>
-      )}
+      )
+      :
+      <StyledSuccessText>Looks Good</StyledSuccessText>
+      }
     </StyledContainer>
   )
 }

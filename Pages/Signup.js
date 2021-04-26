@@ -11,7 +11,6 @@ import ConfirmSignup from "./ConfirmSignup";
 const StyledText = styled.Text`
   padding-left: 16px;
   padding-right: 16px;
-  padding-top: 16px;
   padding-bottom: 16px;
   font-family: "Avenir";
   font-size: 18px;
@@ -29,6 +28,8 @@ const StyledActions = styled.View`
 
 
 export default function Signup({ props, navigation }) {
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
@@ -38,6 +39,8 @@ export default function Signup({ props, navigation }) {
 
 
   const handleSignupAttempt = async (email, username, password) => {
+    const clearFirstName = firstName.trim()
+    const clearLastName = lastName.trim()
     const clearEmail = email.trim()
     const clearUsername = username.trim()
     const clearPassword = password.trim()
@@ -48,6 +51,8 @@ export default function Signup({ props, navigation }) {
         password: clearPassword,
         attributes: {
           email: clearEmail,
+          given_name: firstName,
+          family_name: lastName
         },
       });
     } catch (err) {
@@ -57,7 +62,7 @@ export default function Signup({ props, navigation }) {
   }
 
   const inputIsValid = () =>
-    username !== "" && password !== "" && !passwordIsInvalid() && email !== "" && !emailIsInvalid()
+    firstName !== "" && lastName !== "" && username !== "" && password !== "" && !passwordIsInvalid() && email !== "" && !emailIsInvalid()
       ? true
       : false
 
@@ -112,9 +117,37 @@ export default function Signup({ props, navigation }) {
       <View>
         {!confirmSignupPage ?
         <View>
-          <StyledText style={{alignSelf: "center", paddingTop: 30, paddingBottom: 30, fontSize: 24}}>
+          <StyledText style={{alignSelf: "center", paddingTop: 15, paddingBottom: 15, fontSize: 24}}>
             Welcome to Spark
           </StyledText>
+          <Input
+            label="first name"
+            value={firstName}
+            error={
+              firstName.trim() === ""
+                ? "mandatory field"
+                : firstName.trim().includes(" ")
+                ? "invalid characters"
+                : firstName.length < 1
+                ? "too short"
+                : false
+            }
+            onChangeText={(val) => setFirstName(val)}
+          />
+          <Input
+            label="last name"
+            value={lastName}
+            error={
+              lastName.trim() === ""
+                ? "mandatory field"
+                : lastName.trim().includes(" ")
+                ? "invalid characters"
+                : lastName.length < 1
+                ? "too short"
+                : false
+            }
+            onChangeText={(val) => setLastName(val)}
+          />
           <Input
             label="email"
             error={emailIsInvalid()}
