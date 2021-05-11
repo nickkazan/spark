@@ -2,7 +2,10 @@ import React, { useState, useContext } from "react";
 import styled from '../node_modules/styled-components/native';
 import { View } from "react-native";
 import { Auth } from "aws-amplify";
+
 import AuthContext from '../context/auth-context.js'
+import { signIn } from '../context/actions';
+import { storeSignInData } from '../context/utility';
 
 import PrimaryButton from "../components/PrimaryButton";
 import Input from "../components/Input";
@@ -35,7 +38,7 @@ export default function Signup({ props, navigation }) {
   const [password, setPassword] = useState("")
   const [code, setCode] = useState("")
   const [confirmSignupPage, setConfirmSignupPage] = useState(false)
-  const { signUp } = useContext(AuthContext);
+  const [state, dispatch] = useContext(AuthContext);
 
 
   const handleSignupAttempt = async (email, username, password) => {
@@ -108,7 +111,8 @@ export default function Signup({ props, navigation }) {
   const handleConfirm = async () => {
     await confirmSignUp(username, code)
     await handleSignIn(username, password)
-    signUp()
+    storeSignInData()
+    dispatch(signIn())
   };
 
   const handleCode = (val) => setCode(val)

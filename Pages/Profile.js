@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import styled from '../node_modules/styled-components/native';
-import { View } from "react-native";
 import { Auth } from "aws-amplify";
 import AuthContext from '../context/auth-context.js'
 
@@ -41,26 +40,25 @@ const StyledBottomBar = styled.View`
   justify-content: space-between;
 `
 
-
 export default function Profile({ props, navigation }) {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [username, setUsername] = useState("")
 
-  const { signOut, getUserData } = useContext(AuthContext);
+  const [state, dispatch] = useContext(AuthContext);
 
   useEffect(() => {
     fetchUserData()
   }, [])
   
   const fetchUserData = async () => {
-    const userData = JSON.parse(await getUserData())
-    setFirstName(userData.firstName)
-    setLastName(userData.lastName)
-    setEmail(userData.email)
-    setUsername(userData.username)
-    console.log(userData)
+    const parsedUserData = JSON.parse(state.userData)
+    setFirstName(parsedUserData.firstName)
+    setLastName(parsedUserData.lastName)
+    setEmail(parsedUserData.email)
+    setUsername(parsedUserData.username)
+    console.log(state.savedActivities)
   }
 
   return (
@@ -71,8 +69,7 @@ export default function Profile({ props, navigation }) {
           <StyledText style={{color: '#fff'}}>@{username}</StyledText>
         </StyledTopBar>
         <StyledBottomBar>
-        <StyledText>Here is where saved activities will go...</StyledText>
-
+          <StyledText>Here is where saved activities will go...</StyledText>
         </StyledBottomBar>
       </StyledContainer>
   );

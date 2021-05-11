@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from '../node_modules/react';
+import React, { useState, useEffect, useContext } from '../node_modules/react';
 import styled from '../node_modules/styled-components/native';
+
+import AuthContext from '../context/auth-context.js'
+import { signIn } from '../context/actions';
 
 import Choice from '../components/Choice';
 import PrimaryButton from '../components/PrimaryButton';
@@ -35,6 +38,7 @@ const StyledMessage = styled.Text`
 `
 
 export default function Home({navigation}) {
+  const [state, dispatch] = useContext(AuthContext);
   const listOfCategories = [
     [
       {id: '1000', choiceName: 'Active', categoryCode: 'active', 'isActive': false},
@@ -89,6 +93,11 @@ export default function Home({navigation}) {
   const [choiceCounter, setChoiceCounter] = useState(0)
   const [finalChoices, setFinalChoices] = useState({})
 
+  // Should be deleted
+  useEffect(() => {
+    console.log(state)
+  }, [state])
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       position => {
@@ -138,7 +147,7 @@ export default function Home({navigation}) {
       const data = JSON.stringify(finalChoices)
       console.log("DATA: ", data)
       
-      fetch('http://192.168.1.17:8080/resulting-activities', {
+      fetch('http://192.168.1.67:8080/resulting-activities', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

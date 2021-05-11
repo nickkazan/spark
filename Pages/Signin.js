@@ -2,7 +2,10 @@ import React, { useState, useContext } from "react";
 import styled from '../node_modules/styled-components/native';
 import { View } from "react-native";
 import { Auth } from "aws-amplify";
-import AuthContext from '../context/auth-context.js'
+
+import AuthContext from '../context/auth-context.js';
+import { signIn } from '../context/actions';
+import { storeSignInData } from '../context/utility';
 
 import PrimaryButton from "../components/PrimaryButton";
 import Input from "../components/Input";
@@ -30,7 +33,7 @@ export default function Signin({ navigation }) {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [unknownLogin, setUnknownLogin] = useState(false)
-  const { signIn } = useContext(AuthContext);
+  const [state, dispatch] = useContext(AuthContext);
 
 
   const inputIsValid = () =>
@@ -50,7 +53,8 @@ export default function Signin({ navigation }) {
   const handleSignIn = async (username, password) => {
     try {
       await Auth.signIn(username, password)
-      signIn()
+      storeSignInData()
+      dispatch(signIn())
     } catch (error) {
       console.log("error signing in", error)
       setUnknownLogin(true)

@@ -1,11 +1,14 @@
 const express = require("express")
 require("dotenv").config()
-const ck = require("ckey");
-const axios = require('axios');
+const ck = require("ckey")
+const axios = require('axios')
+// const tools = require("./utility.js")
+// const categories = require('./categories.json')
 
 const PORT = 8080
 const URL =  "https://api.yelp.com/v3/businesses/search"
 const API_KEY = ck.YELP_API_KEY
+
 
 const app = express()
 app.use(express.json());
@@ -45,6 +48,10 @@ app.post("/resulting-activities", (req, res) => {
     console.error(err.response)
   })
 });
+
+// app.get("/get-categories", (req, res) => {
+
+// })
 
 app.listen(PORT, () => {
   console.log("Server is listening on port: ", PORT)
