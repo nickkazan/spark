@@ -5,8 +5,6 @@ const StyledTouchable = styled.TouchableOpacity`
   flex-direction: row;
   background-color: #fff;
   align-self: stretch;
-  /* align-items: center; */
-  /* justify-content: center; */
   border-radius: 10px;
   border-color: black;
   border-width: 2px;
@@ -69,7 +67,6 @@ const StyledRating = styled.Text`
 `
 
 export default function Choice(props) {
-  console.log(props)
   return (
     <StyledTouchable onPress={props.onPress} style={props.style}>
       <StyledImage source={{uri: props.image}} />

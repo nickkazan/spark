@@ -12,14 +12,17 @@ export const restoreToken = (userToken, userData, savedActivities) => ({
   savedActivities
 });
 
-export const signIn = () => ({
-  type: actionTypes.SIGN_IN
+export const signIn = (userToken, userData) => ({
+  type: actionTypes.SIGN_IN,
+  userToken,
+  userData
 })
 
 export const signOut = () => ({
   type: actionTypes.SIGN_OUT
 })
 
-export const saveActivities = () => ({
-  type: actionTypes.SAVE_ACTIVITIES
+export const saveActivities = (savedActivities) => ({
+  type: actionTypes.SAVE_ACTIVITIES,
+  savedActivities
 })

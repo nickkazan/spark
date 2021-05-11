@@ -1,7 +1,10 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import styled from '../node_modules/styled-components/native';
 import { Auth } from "aws-amplify";
+import { useFocusEffect } from '@react-navigation/native';
+
 import AuthContext from '../context/auth-context.js'
+import { getSavedActivities } from '../context/utility.js'
 
 
 const StyledContainer = styled.View`
@@ -45,12 +48,14 @@ export default function Profile({ props, navigation }) {
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [username, setUsername] = useState("")
+  const [savedActivities, setSavedActivities] = useState([])
 
   const [state, dispatch] = useContext(AuthContext);
 
   useEffect(() => {
     fetchUserData()
   }, [])
+
   
   const fetchUserData = async () => {
     const parsedUserData = JSON.parse(state.userData)
@@ -58,7 +63,6 @@ export default function Profile({ props, navigation }) {
     setLastName(parsedUserData.lastName)
     setEmail(parsedUserData.email)
     setUsername(parsedUserData.username)
-    console.log(state.savedActivities)
   }
 
   return (
@@ -70,6 +74,7 @@ export default function Profile({ props, navigation }) {
         </StyledTopBar>
         <StyledBottomBar>
           <StyledText>Here is where saved activities will go...</StyledText>
+          <StyledText>{state.savedActivities}</StyledText>
         </StyledBottomBar>
       </StyledContainer>
   );

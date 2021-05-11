@@ -35,7 +35,6 @@ export const stateReducer = (state, action) => {
         savedActivities: null
       };
     case actionTypes.SAVE_ACTIVITIES:
-      savedActivities = saveActivity()
       return {
         ...state,
         savedActivities: action.savedActivities

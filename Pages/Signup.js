@@ -111,9 +111,9 @@ export default function Signup({ props, navigation }) {
   const handleConfirm = async () => {
     await confirmSignUp(username, code)
     await handleSignIn(username, password)
-    storeSignInData()
-    dispatch(signIn())
-  };
+    const {userToken, userData} = storeSignInData()
+    dispatch(signIn(userToken, userData))
+};
 
   const handleCode = (val) => setCode(val)
 

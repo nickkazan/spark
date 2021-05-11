@@ -7,12 +7,12 @@ const StyledTouchable = styled.TouchableOpacity`
     width: 100px;
     justify-content: center;
     border-radius: 50px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     margin-left: 5px;
     margin-right: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 `
 
 const StyledText = styled.Text`

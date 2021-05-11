@@ -6,7 +6,8 @@ const axios = require('axios')
 // const categories = require('./categories.json')
 
 const PORT = 8080
-const URL =  "https://api.yelp.com/v3/businesses/search"
+const SEARCH_URL =  "https://api.yelp.com/v3/businesses/search"
+const BUSINESS_ID_URL = "https://api.yelp.com/v3/businesses/"
 const API_KEY = ck.YELP_API_KEY
 
 
@@ -34,7 +35,7 @@ app.post("/resulting-activities", (req, res) => {
 
   var params = new URLSearchParams(rawParams)
 
-  axios.get(URL + "?" + params, {
+  axios.get(SEARCH_URL + "?" + params, {
     headers: {
       'Authorization': 'Bearer ' + API_KEY,
       'Content-Type': 'application/json'
@@ -49,9 +50,25 @@ app.post("/resulting-activities", (req, res) => {
   })
 });
 
-// app.get("/get-categories", (req, res) => {
+app.get("/business-id-lookup/:id", (req, res) => {
+  const id = req.params.id
+  console.log(id)
 
-// })
+  axios.get(BUSINESS_ID_URL + id, {
+    headers: {
+      'Authorization': 'Bearer ' + API_KEY,
+      'Content-Type': 'application/json'
+    },
+  })
+  .then((response) => {
+    console.log("Business Data: ", response.data)
+    res.send(JSON.stringify(response.data))
+  })
+  .catch((err) => {
+    console.error(err.response)
+  })
+
+});
 
 app.listen(PORT, () => {
   console.log("Server is listening on port: ", PORT)

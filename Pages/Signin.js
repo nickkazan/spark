@@ -53,8 +53,8 @@ export default function Signin({ navigation }) {
   const handleSignIn = async (username, password) => {
     try {
       await Auth.signIn(username, password)
-      storeSignInData()
-      dispatch(signIn())
+      const {userToken, userData} = storeSignInData()
+      dispatch(signIn(userToken, userData))
     } catch (error) {
       console.log("error signing in", error)
       setUnknownLogin(true)

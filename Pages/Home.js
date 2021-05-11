@@ -163,7 +163,6 @@ export default function Home({navigation}) {
       .catch((error) => {
         console.error(error)
       });
-
     }
   }
 
