@@ -19,11 +19,9 @@ export const getUserData = async () => {
 };
 
 export const getSavedActivities = async () => {
-  let savedActivitiesIds = await SecureStore.getItemAsync('savedActivitiesIds')
-  let savedActivities = []
-  if (savedActivitiesIds) {
-    savedActivitiesIds.forEach(id => {
-      let URL = "http://192.168.1.67:8080/business-id-lookup/" + id
+  const requestData = async (id) => {
+    let URL = "http://192.168.1.67:8080/business-id-lookup/" + id
+    return new Promise((resolve, reject) => {
       fetch(URL, {
         method: 'GET',
         headers: {
@@ -32,17 +30,26 @@ export const getSavedActivities = async () => {
       })
       .then((response) => {
         response.json().then((data) => {
-          console.log(data)
-          savedActivities.push(data)
+          resolve(data)
         });
       })
       .catch((error) => {
         console.error(error)
       });
-    
     })
   }
-  return savedActivities
+
+  let savedActivitiesIdsJSON = await SecureStore.getItemAsync('savedActivitiesIds')
+  let savedActivitiesIds = JSON.parse(savedActivitiesIdsJSON)
+  let savedActivities = []
+  if (savedActivitiesIds) {
+    for (const id of savedActivitiesIds) {
+      savedActivities.push(requestData(id))
+    }
+    return Promise.all(savedActivities).then((allSavedActivities) => {
+      return allSavedActivities
+    })
+  }
 }
 
 export const storeSignInData = async () => {

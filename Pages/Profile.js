@@ -54,6 +54,7 @@ export default function Profile({ props, navigation }) {
 
   useEffect(() => {
     fetchUserData()
+    getSavedActivities().then((activities) => { setSavedActivities(activities) })
   }, [])
 
   
@@ -74,7 +75,7 @@ export default function Profile({ props, navigation }) {
         </StyledTopBar>
         <StyledBottomBar>
           <StyledText>Here is where saved activities will go...</StyledText>
-          <StyledText>{state.savedActivities}</StyledText>
+          <StyledText>{savedActivities.length}</StyledText>
         </StyledBottomBar>
       </StyledContainer>
   );
