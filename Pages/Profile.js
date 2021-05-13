@@ -2,14 +2,15 @@ import React, { useState, useContext, useEffect, useCallback } from "react";
 import styled from '../node_modules/styled-components/native';
 import { Auth } from "aws-amplify";
 import { useFocusEffect } from '@react-navigation/native';
+import { FlatList, SafeAreaView } from 'react-native'
+import ResultingItem from '../components/ResultingItem'
 
 import AuthContext from '../context/auth-context.js'
 import { getSavedActivities } from '../context/utility.js'
 
 
 const StyledContainer = styled.View`
-  flex: 1;
-  padding-bottom: 50px;
+  flex: 10;
   flex-direction: column;
   background-color: #fff;
   align-items: center;
@@ -21,26 +22,30 @@ const StyledText = styled.Text`
   font-family: "Avenir";
   font-size: 18px;
   color: black;
+  align-self: center;
 `
 const StyledTopBar = styled.View`
   flex: 2;
   width: 100%;
-  padding-top: 25px;
-  padding-bottom: 25px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   flex-direction: column;
   background-color: #2a9d8f;
   align-items: center;
+  /* border-bottom-left-radius: 50; */
+  /* border-bottom-right-radius: 50; */
+  /* border-top-right-radius: 50; */
+  /* border-top-left-radius: 50; */
   justify-content: space-between;
 `
 const StyledBottomBar = styled.View`
-  flex: 6;
+  flex: 8;
   width: 100%;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  /* padding-top: 10px; */
+  /* padding-bottom: 10px; */
   flex-direction: column;
   background-color: #fff;
-  align-items: center;
-  justify-content: space-between;
+  align-items: stretch;
 `
 
 export default function Profile({ props, navigation }) {
@@ -66,6 +71,10 @@ export default function Profile({ props, navigation }) {
     setUsername(parsedUserData.username)
   }
 
+  const selectItem = (itemData) => {
+    navigation.navigate('ChosenItem', { data: itemData }) 
+  }
+
   return (
       <StyledContainer>
         <StyledTopBar>
@@ -74,8 +83,22 @@ export default function Profile({ props, navigation }) {
           <StyledText style={{color: '#fff'}}>@{username}</StyledText>
         </StyledTopBar>
         <StyledBottomBar>
-          <StyledText>Here is where saved activities will go...</StyledText>
-          <StyledText>{savedActivities.length}</StyledText>
+          <StyledText style={{fontSize: '24px', padding: 15}}>Saved Activities</StyledText>
+          <FlatList
+          data={savedActivities}
+          renderItem={({ item }) => (
+            <ResultingItem
+              name={item.name}
+              price={item.price}
+              image={item.image_url}
+              rating={item.rating.toString()}
+              review_count={item.review_count.toString()}
+              address={item.location.address1}
+              onPress={() => selectItem(item)}
+            />
+          )}
+          keyExtractor={item => item.id}
+          />
         </StyledBottomBar>
       </StyledContainer>
   );

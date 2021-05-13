@@ -10,7 +10,6 @@ export const getUserData = async () => {
     userData = await SecureStore.getItemAsync('userData')
     savedActivities = await SecureStore.getItemAsync('savedActivitiesIds')
     // await SecureStore.deleteItemAsync('savedActivitiesIds')
-    // await SecureStore.deleteItemAsync('savedActivities')
 
   } catch (e) {
     console.log("failed to find user data locally")
@@ -81,8 +80,9 @@ export const storeActivity = async (activityId) => {
   } catch (e) {
     console.log(e)
   }
-  // Need to add a check to see if it already exists in the list
-  savedActivities.push(activityId)
-  await SecureStore.setItemAsync('savedActivitiesIds', JSON.stringify(savedActivities))
+  if (!savedActivities.includes(activityId)) {
+    savedActivities.push(activityId)
+    await SecureStore.setItemAsync('savedActivitiesIds', JSON.stringify(savedActivities))  
+  }
   return savedActivities
 }

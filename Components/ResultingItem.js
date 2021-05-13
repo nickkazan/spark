@@ -66,7 +66,8 @@ const StyledRating = styled.Text`
   opacity: 0.5;
 `
 
-export default function Choice(props) {
+export default function Choice(props, {navigation}) {
+
   return (
     <StyledTouchable onPress={props.onPress} style={props.style}>
       <StyledImage source={{uri: props.image}} />
