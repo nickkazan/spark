@@ -32,17 +32,11 @@ const StyledTopBar = styled.View`
   flex-direction: column;
   background-color: #2a9d8f;
   align-items: center;
-  /* border-bottom-left-radius: 50; */
-  /* border-bottom-right-radius: 50; */
-  /* border-top-right-radius: 50; */
-  /* border-top-left-radius: 50; */
   justify-content: space-between;
 `
 const StyledBottomBar = styled.View`
   flex: 8;
   width: 100%;
-  /* padding-top: 10px; */
-  /* padding-bottom: 10px; */
   flex-direction: column;
   background-color: #fff;
   align-items: stretch;
@@ -60,7 +54,7 @@ export default function Profile({ props, navigation }) {
   useEffect(() => {
     fetchUserData()
     getSavedActivities().then((activities) => { setSavedActivities(activities) })
-  }, [])
+  }, [state.savedActivities])
 
   
   const fetchUserData = async () => {
@@ -72,7 +66,7 @@ export default function Profile({ props, navigation }) {
   }
 
   const selectItem = (itemData) => {
-    navigation.navigate('ChosenItem', { data: itemData }) 
+    navigation.navigate('ChosenItem', { data: itemData, saved: true }) 
   }
 
   return (
@@ -83,7 +77,7 @@ export default function Profile({ props, navigation }) {
           <StyledText style={{color: '#fff'}}>@{username}</StyledText>
         </StyledTopBar>
         <StyledBottomBar>
-          <StyledText style={{fontSize: '24px', padding: 15}}>Saved Activities</StyledText>
+          <StyledText style={{fontSize: 24, padding: 15}}>Saved Activities</StyledText>
           <FlatList
           data={savedActivities}
           renderItem={({ item }) => (

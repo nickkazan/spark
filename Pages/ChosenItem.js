@@ -5,8 +5,8 @@ import styled from '../node_modules/styled-components/native';
 import Tool from '../components/Tool';
 
 import AuthContext from '../context/auth-context.js';
-import { storeActivity } from '../context/utility';
-import { saveActivities } from '../context/actions';
+import { storeActivity, deleteActivity } from '../context/utility';
+import { saveActivities, deleteActivityById } from '../context/actions';
 
 
 const StyledContainer = styled.View`
@@ -62,6 +62,7 @@ const StyledButtonRow = styled.View`
 export default function ChosenItem({navigation, route}) {
   const [state, dispatch] = useContext(AuthContext);
   const data = route.params.data
+  const saved = route.params.saved
   const lengthOfCategories = data.categories.length
   console.log(lengthOfCategories)
 
@@ -89,8 +90,12 @@ export default function ChosenItem({navigation, route}) {
 
   const saveActivityToProfile = async () => {
     let savedActivities = await storeActivity(data.id)
-    console.log("ID in ChosenItem: ", data.id)
     dispatch(saveActivities(savedActivities))
+  }
+
+  const removeActivityFromProfile = async () => {
+    let savedActivities = await deleteActivity(data.id)
+    dispatch(deleteActivityById(savedActivities))
   }
 
 
@@ -125,7 +130,12 @@ export default function ChosenItem({navigation, route}) {
         <StyledButtonRow>
           {/* Add directions with Google Maps / Apple Maps */}
           <Tool name="Directions" />
-          <Tool name="Save" onPress={() => saveActivityToProfile()}/>
+          {
+            saved ? 
+            <Tool name="Remove" onPress={() => removeActivityFromProfile()}/>
+            :
+            <Tool name="Save" onPress={() => saveActivityToProfile()}/>
+          }
         </StyledButtonRow>
       </StyledInformation>
     </StyledContainer>

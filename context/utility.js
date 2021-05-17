@@ -70,13 +70,11 @@ export const storeSignInData = async () => {
 
 export const storeActivity = async (activityId) => {
   let savedActivities = []
-  console.log("Activity Data: ", activityId)
   try { 
     const currentSavedActivities =  await SecureStore.getItemAsync('savedActivitiesIds')
     if (JSON.parse(currentSavedActivities)) {
       savedActivities = JSON.parse(currentSavedActivities)
     }
-    console.log("Array in StoreActivity: ", savedActivities)
   } catch (e) {
     console.log(e)
   }
@@ -86,3 +84,21 @@ export const storeActivity = async (activityId) => {
   }
   return savedActivities
 }
+
+export const deleteActivity = async (activityId) => {
+  let savedActivities = []
+  try { 
+    const currentSavedActivities =  await SecureStore.getItemAsync('savedActivitiesIds')
+    if (JSON.parse(currentSavedActivities)) {
+      savedActivities = JSON.parse(currentSavedActivities)
+    }
+  } catch (e) {
+    console.log(e)
+  }
+  if (savedActivities.includes(activityId)) {
+    savedActivities.splice(savedActivities.indexOf(activityId), 1)
+    await SecureStore.setItemAsync('savedActivitiesIds', JSON.stringify(savedActivities))  
+  }
+  return savedActivities
+}
+

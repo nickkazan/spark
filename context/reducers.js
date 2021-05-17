@@ -9,7 +9,6 @@ export const initialState = {
 };
 
 export const stateReducer = (state, action) => {
-  // let userToken, userData, savedActivities
   switch (action.type) {
     case actionTypes.RESTORE_TOKEN:
       return {
@@ -35,6 +34,11 @@ export const stateReducer = (state, action) => {
         savedActivities: null
       };
     case actionTypes.SAVE_ACTIVITIES:
+      return {
+        ...state,
+        savedActivities: action.savedActivities
+      };
+    case actionTypes.DELETE_ACTIVITY:
       return {
         ...state,
         savedActivities: action.savedActivities
