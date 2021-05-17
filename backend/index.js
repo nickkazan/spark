@@ -27,7 +27,7 @@ app.post("/resulting-activities", (req, res) => {
     'latitude': parseFloat(body.latitude),
     'radius': Math.max(...body.transportation),
     'categories': body.categories.toString(),
-    'limit': 5,
+    'limit': parseInt(body.numberOfChoicesRequested),
     'price': body.prices.toString(),
     'open_now': open
   }

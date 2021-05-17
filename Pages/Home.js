@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from '../node_modules/react';
 import styled from '../node_modules/styled-components/native';
+import Slider from '@react-native-community/slider';
 
 import AuthContext from '../context/auth-context.js'
 import { signIn } from '../context/actions';
 
 import Choice from '../components/Choice';
 import PrimaryButton from '../components/PrimaryButton';
+import { set } from 'react-native-reanimated';
 
 const StyledContainer = styled.View`
   flex: 10;
@@ -92,6 +94,7 @@ export default function Home({navigation}) {
   const [listOfChoices, setListOfChoices] = useState(listOfCategories)
   const [choiceCounter, setChoiceCounter] = useState(0)
   const [finalChoices, setFinalChoices] = useState({})
+  const [numberOfChoicesRequested, setNumberOfChoicesRequested] = useState(3)
 
   // Should be deleted
   useEffect(() => {
@@ -144,7 +147,8 @@ export default function Home({navigation}) {
     } else {
       // We hit all of the pages, time to call API
       console.log("Our Choice Counter is passed the limit.")
-      const data = JSON.stringify(finalChoices)
+      const dataBeforeStringify = {...finalChoices, "numberOfChoicesRequested" : numberOfChoicesRequested}
+      const data = JSON.stringify(dataBeforeStringify)
       console.log("DATA: ", data)
       
       fetch('http://192.168.1.67:8080/resulting-activities', {
@@ -183,23 +187,41 @@ export default function Home({navigation}) {
   return (
     <StyledContainer>
       <StyledMessage>
-        {choiceCounter < titles.length ? titles[choiceCounter][2] : "Ready to see your options?"}
+        {choiceCounter < titles.length ? titles[choiceCounter][2] : "How many options do you want to see?"}
       </StyledMessage>
-      <StyledRowGroups>
-        {
-          listOfChoices.map((rowOfItems, rowIndex) => (
-            <StyledRow key={rowIndex.toString()}> 
-              {
-                rowOfItems.map((item, itemIndex) => (
-                  <Choice key={item.id} name={item.choiceName} textStyle={ item.isActive ? activeTextStyle: inactiveTextStyle }
-                  style={ item.isActive ? activeChoiceStyle: inactiveChoiceStyle } onPress={() => selectChoice(rowIndex, itemIndex)} />
-                ))
-              }
-            </StyledRow>
-          ))
-        }
-      </StyledRowGroups>
-      <PrimaryButton text={choiceCounter < titles.length ? "Next" : "Yes!"} onPress={() => submitChoices(listOfChoices)}/>
+      {choiceCounter < titles.length ? 
+        <StyledRowGroups>
+          {
+            listOfChoices.map((rowOfItems, rowIndex) => (
+              <StyledRow key={rowIndex.toString()}> 
+                {
+                  rowOfItems.map((item, itemIndex) => (
+                    <Choice key={item.id} name={item.choiceName} textStyle={ item.isActive ? activeTextStyle: inactiveTextStyle }
+                    style={ item.isActive ? activeChoiceStyle: inactiveChoiceStyle } onPress={() => selectChoice(rowIndex, itemIndex)} />
+                  ))
+                }
+              </StyledRow>
+            ))
+          }
+        </StyledRowGroups>
+      :
+        <>
+          <StyledMessage>
+            {numberOfChoicesRequested}
+          </StyledMessage>
+          <Slider
+            style={{width: '80%', height: 40}}
+            minimumValue={1}
+            maximumValue={10}
+            step={1}
+            value={numberOfChoicesRequested}
+            onValueChange={(value) => setNumberOfChoicesRequested(value)}
+            minimumTrackTintColor="#2a9d8f"
+            maximumTrackTintColor="#000000"
+          />
+        </>
+      }
+    <PrimaryButton text={choiceCounter < titles.length ? "Next" : "Get Activities!"} onPress={() => submitChoices(listOfChoices)}/>
     </StyledContainer>
   )
 }
