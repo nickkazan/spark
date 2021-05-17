@@ -29,6 +29,7 @@ const StyledTopBar = styled.View`
   width: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
+  margin-bottom: 10px;
   flex-direction: column;
   background-color: #2a9d8f;
   align-items: center;

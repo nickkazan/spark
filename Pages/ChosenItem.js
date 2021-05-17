@@ -79,11 +79,12 @@ export default function ChosenItem({navigation, route}) {
 
   const openPhone = () => {
     Linking.canOpenURL(`tel:${data.phone}`).then(supported => {
-      if (supported) {
+      console.log("Phone is ->>> ", data.phone)
+      if (supported && data.phone !== "") {
         Linking.openURL(`tel:${data.phone}`);
       } else {
         console.log("Don't know how to open URI: " + data.phone);
-        alert("Phone is not available.")
+        alert("No phone number found for this activity.")
       }
     });
   };
