@@ -9,13 +9,21 @@ export const getUserData = async () => {
     userToken = await SecureStore.getItemAsync('userToken')
     userData = await SecureStore.getItemAsync('userData')
     savedActivities = await SecureStore.getItemAsync('savedActivitiesIds')
-    // await SecureStore.deleteItemAsync('savedActivitiesIds')
-
   } catch (e) {
     console.log("failed to find user data locally")
   }
   return {userToken, userData, savedActivities}
 };
+
+export const logUserOutOfAccount = async () => {
+  try {
+    await SecureStore.deleteItemAsync('userToken')
+    await SecureStore.deleteItemAsync('userData')
+    await SecureStore.deleteItemAsync('savedActivitiesIds')
+  } catch (e) {
+    console.log("failed to delete local user information")
+  }
+}
 
 export const getSavedActivities = async () => {
   const requestData = async (id) => {
@@ -64,6 +72,9 @@ export const storeSignInData = async () => {
 
   await SecureStore.setItemAsync('userToken', userToken)
   await SecureStore.setItemAsync('userData', JSON.stringify({firstName, lastName, email, username}))
+  console.log("HEEEERRRRREEEEE")
+  console.log(userToken)
+  console.log(userData)
 
   return {userToken, userData}
 };

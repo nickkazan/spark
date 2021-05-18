@@ -3,7 +3,7 @@ import styled from '../node_modules/styled-components/native';
 
 const StyledTouchable = styled.TouchableOpacity`
   align-items: center;
-  width: 75%;
+  width: 50%;
   justify-content: flex-end;
   border-radius: 10px;
   margin-bottom: 50px;
@@ -19,8 +19,8 @@ const StyledText = styled.Text`
 
 export default function PrimaryButton(props) {
   return (
-    <StyledTouchable style={{ backgroundColor: props.disabled ? '#cccccc' : '#2a9d8f' }} disabled={props.disabled} onPress={props.onPress}>
-      <StyledText> {props.text} </StyledText>
+    <StyledTouchable style={[props.style, { backgroundColor: props.disabled ? '#cccccc' : '#2a9d8f' }]} disabled={props.disabled} onPress={props.onPress}>
+      <StyledText style={props.textStyle}> {props.text} </StyledText>
     </StyledTouchable>
   )
 }

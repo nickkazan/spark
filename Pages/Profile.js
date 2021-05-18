@@ -1,12 +1,13 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import styled from '../node_modules/styled-components/native';
 import { Auth } from "aws-amplify";
-import { useFocusEffect } from '@react-navigation/native';
-import { FlatList, SafeAreaView } from 'react-native'
-import ResultingItem from '../components/ResultingItem'
+import { FlatList, SafeAreaView } from 'react-native';
+import ResultingItem from '../components/ResultingItem';
+import PrimaryButton from '../components/PrimaryButton';
 
-import AuthContext from '../context/auth-context.js'
-import { getSavedActivities } from '../context/utility.js'
+import AuthContext from '../context/auth-context.js';
+import { getSavedActivities, logUserOutOfAccount } from '../context/utility.js';
+import { signOut } from '../context/actions';
 
 
 const StyledContainer = styled.View`
@@ -59,15 +60,19 @@ export default function Profile({ props, navigation }) {
 
   
   const fetchUserData = async () => {
-    const parsedUserData = JSON.parse(state.userData)
-    setFirstName(parsedUserData.firstName)
-    setLastName(parsedUserData.lastName)
-    setEmail(parsedUserData.email)
-    setUsername(parsedUserData.username)
+    setFirstName(state.userData.['given_name'])
+    setLastName(state.userData['family_name'])
+    setEmail(state.userData['email'])
+    setUsername(state.userData['cognito:username'])
   }
 
   const selectItem = (itemData) => {
     navigation.navigate('ChosenItem', { data: itemData, saved: true }) 
+  }
+
+  const logOutOfAccount = async () => {
+    logUserOutOfAccount()
+    dispatch(signOut())
   }
 
   return (
@@ -80,8 +85,8 @@ export default function Profile({ props, navigation }) {
         <StyledBottomBar>
           <StyledText style={{fontSize: 24, padding: 15}}>Saved Activities</StyledText>
           <FlatList
-          data={savedActivities}
-          renderItem={({ item }) => (
+            data={savedActivities}
+            renderItem={({ item }) => (
             <ResultingItem
               name={item.name}
               price={item.price}
@@ -91,9 +96,15 @@ export default function Profile({ props, navigation }) {
               address={item.location.address1}
               onPress={() => selectItem(item)}
             />
-          )}
-          keyExtractor={item => item.id}
+            )}
+            keyExtractor={item => item.id}
           />
+          <PrimaryButton
+            style={{marginBottom: 10, marginTop: 10, alignSelf: 'center'}}
+            text="log out"
+            onPress={() => logOutOfAccount()}
+          />
+
         </StyledBottomBar>
       </StyledContainer>
   );
