@@ -67,13 +67,13 @@ export default function Home({navigation}) {
   ]
   const listOfTransportation = [
     [
-      {id: '3000', choiceName: 'Walking', categoryCode: 2000, 'isActive': false},
-      {id: '3001', choiceName: 'Bus', categoryCode: 10000, 'isActive': false},
-      {id: '3002', choiceName: 'Biking', categoryCode: 5000, 'isActive': false}
+      {id: '3000', choiceName: 'Walking', categoryCode: 1000, 'isActive': false},
+      {id: '3001', choiceName: 'Bus', categoryCode: 5000, 'isActive': false},
+      {id: '3002', choiceName: 'Biking', categoryCode: 2500, 'isActive': false}
     ],
     [
-      {id: '3003', choiceName: 'Uber', categoryCode: 15000, 'isActive': false},
-      {id: '3004', choiceName: 'Car', categoryCode: 40000, 'isActive': false}
+      {id: '3003', choiceName: 'Uber', categoryCode: 10000, 'isActive': false},
+      {id: '3004', choiceName: 'Car', categoryCode: 15000, 'isActive': false}
     ]
   ]
   const listOfAvailability = [
@@ -177,7 +177,6 @@ export default function Home({navigation}) {
       })
       .then((response) => {
         response.json().then((data) => {
-          console.log(data);
           navigation.navigate('Results', { data: data.businesses })
           resetStates()
         });

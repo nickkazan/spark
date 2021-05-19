@@ -60,7 +60,6 @@ export default function Profile({ props, navigation }) {
 
   
   const fetchUserData = async () => {
-    console.log(state)
     const parsedUserData = JSON.parse(state.userData)
     setFirstName(parsedUserData['firstName'])
     setLastName(parsedUserData['lastName'])

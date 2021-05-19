@@ -51,7 +51,7 @@ export default function NavTab() {
         options={{
           tabBarLabel: 'Test',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="face-profile" color={color} size={35} />
+            <MaterialCommunityIcons name="account" color={color} size={35} />
           ),
           // tabBarBadge: 3,
         }}

@@ -55,7 +55,7 @@ const StyledCategories = styled.View`
 `
 const StyledButtonRow = styled.View`
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
 `
 
 
@@ -89,6 +89,30 @@ export default function ChosenItem({navigation, route}) {
     });
   };
 
+  const openDirections = () => {
+    const address = data.location.address1
+    const city = data.location.city
+    const zipCode = data.location.zip_code
+
+    let daddr = encodeURIComponent(`${address} ${zipCode}, ${city}`);
+
+    console.log(daddr)
+    Linking.canOpenURL(`http://maps.google.com/?daddr=${daddr}`).then(googleSupported => {
+    if (googleSupported) {
+      Linking.openURL(`http://maps.google.com/?daddr=${daddr}`)
+    } else {
+      Linking.canOpenURL(`http://maps.apple.com/?daddr=${daddr}`).then(appleSupported => {
+        if (appleSupported) {
+          Linking.openURL(`http://maps.apple.com/?daddr=${daddr}`)
+        } else {
+          console.log("Cannot open in Google Maps or Apple Maps")
+          alert("Failed to open directions to activity.")
+        }
+      })
+    }
+    })
+  }
+
   const saveActivityToProfile = async () => {
     let savedActivities = await storeActivity(data.id)
     dispatch(saveActivities(savedActivities))
@@ -97,6 +121,7 @@ export default function ChosenItem({navigation, route}) {
   const removeActivityFromProfile = async () => {
     let savedActivities = await deleteActivity(data.id)
     dispatch(deleteActivityById(savedActivities))
+    navigation.navigate('Profile')
   }
 
 
@@ -125,17 +150,15 @@ export default function ChosenItem({navigation, route}) {
             }
         </StyledCategories>
         <StyledButtonRow>
-          <Tool name="Phone" onPress={() => openPhone()}/>
-          <Tool name="Website" onPress={() => openWebsite()}/>
-        </StyledButtonRow>
-        <StyledButtonRow>
+          <Tool name="phone" onPress={() => openPhone()}/>
+          <Tool name="earth" onPress={() => openWebsite()}/>
           {/* Add directions with Google Maps / Apple Maps */}
-          <Tool name="Directions" />
+          <Tool name="directions-fork" onPress={() => openDirections()}/>
           {
             saved ? 
-            <Tool name="Remove" onPress={() => removeActivityFromProfile()}/>
+            <Tool name="trash-can" onPress={() => removeActivityFromProfile()}/>
             :
-            <Tool name="Save" onPress={() => saveActivityToProfile()}/>
+            <Tool name="download-circle" onPress={() => saveActivityToProfile()}/>
           }
         </StyledButtonRow>
       </StyledInformation>
