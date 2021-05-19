@@ -3,11 +3,9 @@ import styled from '../node_modules/styled-components/native';
 import Slider from '@react-native-community/slider';
 
 import AuthContext from '../context/auth-context.js'
-import { signIn } from '../context/actions';
 
 import Choice from '../components/Choice';
 import PrimaryButton from '../components/PrimaryButton';
-import { set } from 'react-native-reanimated';
 
 const StyledContainer = styled.View`
   flex: 10;
@@ -94,22 +92,18 @@ export default function Home({navigation}) {
   const [listOfChoices, setListOfChoices] = useState(listOfCategories)
   const [choiceCounter, setChoiceCounter] = useState(0)
   const [finalChoices, setFinalChoices] = useState({})
+  const [longitude, setLongitude] = useState(0.0)
+  const [latitude, setLatitude] = useState(0.0)
   const [numberOfChoicesRequested, setNumberOfChoicesRequested] = useState(3)
 
-  // Should be deleted
   useEffect(() => {
-    console.log(state)
-  }, [state])
+    grabUserLongitudeAndLatitude()
+  }, [finalChoices])
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        setFinalChoices({...finalChoices, longitude: position.coords.longitude, latitude: position.coords.latitude})
-      },
-      error => alert(error.message),
-      { enableHighAccuracy: false, timeout: 5000, maximumAge: 100000 }
-    );
-  }, [])
+    console.log(longitude)
+    console.log(latitude)
+  }, [latitude, longitude])
 
   useEffect(() => {
     if (choiceCounter === titles.length) {
@@ -122,6 +116,24 @@ export default function Home({navigation}) {
   useEffect(() => {
     console.log("Final is now: ", finalChoices)
   }, [finalChoices])
+
+  const grabUserLongitudeAndLatitude = async () => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        setLongitude(position.coords.longitude)
+        setLatitude(position.coords.latitude)
+      },
+      error => alert(error.message),
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
+    );
+  }
+
+  const resetStates = async () => {
+    setListOfChoices(listOfCategories)
+    setChoiceCounter(0)
+    setNumberOfChoicesRequested(3)
+    setFinalChoices({})
+  }
 
   const selectChoice = (rowIndex, itemIndex) => {
     var tempListOfChoices = listOfChoices.slice()
@@ -147,7 +159,12 @@ export default function Home({navigation}) {
     } else {
       // We hit all of the pages, time to call API
       console.log("Our Choice Counter is passed the limit.")
-      const dataBeforeStringify = {...finalChoices, "numberOfChoicesRequested" : numberOfChoicesRequested}
+      const dataBeforeStringify = {
+        ...finalChoices, 
+        "numberOfChoicesRequested" : numberOfChoicesRequested,
+        "longitude" : longitude,
+        "latitude" : latitude  
+      }
       const data = JSON.stringify(dataBeforeStringify)
       console.log("DATA: ", data)
       
@@ -162,6 +179,7 @@ export default function Home({navigation}) {
         response.json().then((data) => {
           console.log(data);
           navigation.navigate('Results', { data: data.businesses })
+          resetStates()
         });
       })
       .catch((error) => {

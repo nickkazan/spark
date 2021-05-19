@@ -56,14 +56,16 @@ export default function Profile({ props, navigation }) {
   useEffect(() => {
     fetchUserData()
     getSavedActivities().then((activities) => { setSavedActivities(activities) })
-  }, [state.savedActivities])
+  }, [state.userData, state.savedActivities])
 
   
   const fetchUserData = async () => {
-    setFirstName(state.userData.['given_name'])
-    setLastName(state.userData['family_name'])
-    setEmail(state.userData['email'])
-    setUsername(state.userData['cognito:username'])
+    console.log(state)
+    const parsedUserData = JSON.parse(state.userData)
+    setFirstName(parsedUserData['firstName'])
+    setLastName(parsedUserData['lastName'])
+    setEmail(parsedUserData['email'])
+    setUsername(parsedUserData['username'])
   }
 
   const selectItem = (itemData) => {

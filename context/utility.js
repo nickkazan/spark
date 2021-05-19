@@ -69,14 +69,11 @@ export const storeSignInData = async () => {
   const email = userData['email']
   const username = userData['cognito:username']
   const userToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
-
+  const formattedUserData = JSON.stringify({firstName, lastName, email, username})
   await SecureStore.setItemAsync('userToken', userToken)
-  await SecureStore.setItemAsync('userData', JSON.stringify({firstName, lastName, email, username}))
-  console.log("HEEEERRRRREEEEE")
-  console.log(userToken)
-  console.log(userData)
+  await SecureStore.setItemAsync('userData', formattedUserData)
 
-  return {userToken, userData}
+  return {userToken, userData: formattedUserData}
 };
 
 export const storeActivity = async (activityId) => {
@@ -112,4 +109,3 @@ export const deleteActivity = async (activityId) => {
   }
   return savedActivities
 }
-
