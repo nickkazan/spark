@@ -177,7 +177,7 @@ export default function Home({navigation}) {
       })
       .then((response) => {
         response.json().then((data) => {
-          navigation.navigate('Results', { data: data.businesses })
+          navigation.navigate('Results', { data: data })
           resetStates()
         });
       })
