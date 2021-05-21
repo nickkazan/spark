@@ -1,9 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeStack from '../navigation/HomeStack';
 import ProfileStack from '../navigation/ProfileStack';
+import SwipeStack from './SwipeStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,21 +35,21 @@ export default function NavTab() {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={ProfileStack}
+        name="Swipe"
+        component={SwipeStack}
         options={{
-          tabBarLabel: 'Profile',
+          tabBarLabel: 'Swipe',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="magnify" color={color} size={35} />
+            <MaterialCommunityIcons name="cards" color={color} size={35} />
           ),
           // tabBarBadge: 3,
         }}
       />
       <Tab.Screen
-        name="Test"
+        name="Profile"
         component={ProfileStack}
         options={{
-          tabBarLabel: 'Test',
+          tabBarLabel: 'Profile',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="account" color={color} size={35} />
           ),

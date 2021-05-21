@@ -53,6 +53,43 @@ app.post("/resulting-activities", (req, res) => {
   })
 });
 
+app.post("/swipe-activities", (req, res) => {
+  const body = req.body
+  
+  const OPEN = false
+  const RADIUS = 5000
+  const LIMIT = 30
+  const PRICE = "1, 2, 3, 4"
+  const CATEGORIES = "nightlife, restaurants, food"
+
+  // some values are currently hardcoded but might be user filters later on
+  const rawParams = {
+    'longitude': parseFloat(body.longitude),
+    'latitude': parseFloat(body.latitude),
+    'radius': RADIUS,
+    'categories': CATEGORIES,
+    'limit': LIMIT,
+    'price': PRICE,
+    'open_now': OPEN
+  }
+  var params = new URLSearchParams(rawParams)
+
+  axios.get(SEARCH_URL + "?" + params, {
+    headers: {
+      'Authorization': 'Bearer ' + API_KEY,
+      'Content-Type': 'application/json'
+    },
+  })
+  .then((response) => {
+    const listOfActivities = response.data.businesses
+    const newListOfActivities = (listOfActivities.sort(() => Math.random() - 0.5))
+    res.send(JSON.stringify(newListOfActivities))
+  })
+  .catch((err) => {
+    console.error(err.response)
+  })
+});
+
 app.get("/business-id-lookup/:id", (req, res) => {
   const id = req.params.id
   console.log(id)
