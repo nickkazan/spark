@@ -4,6 +4,8 @@ import { View, Dimensions, Image, Animated, PanResponder, ImageBackground } from
 import { LinearGradient } from 'expo-linear-gradient';
 
 import AuthContext from '../context/auth-context.js';
+import { storeActivity } from '../context/utility';
+import { saveActivities } from '../context/actions';
 
 
 const StyledContainer = styled.View`
@@ -53,6 +55,7 @@ export default function Swipe(props, { navigation }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [delayedIndex, setDelayedIndex] = useState(0)
   const [activities, setActivities] = useState([])
+  const [activityToSave, setActivityToSave] = useState("")
   const [state, dispatch] = useContext(AuthContext)
 
   const SCREEN_HEIGHT = Dimensions.get('window').height
@@ -110,7 +113,16 @@ export default function Swipe(props, { navigation }) {
             restSpeedThreshold: 100,
             restDisplacementThreshold: 40
           }).start(() => {
-            setCurrentIndex(currentIndex => currentIndex + 1)
+            // saveActivityToProfile()
+            let frozenIndex = currentIndex
+            console.log("FI ", frozenIndex)
+            setCurrentIndex(currentIndex => {
+              setActivities(activities => {
+                setActivityToSave(activities[currentIndex].id)
+                return activities
+              })
+              return currentIndex + 1
+            })
           })
         } else if (gestureState.dx < -120) {
           Animated.spring(position, {
@@ -154,6 +166,17 @@ export default function Swipe(props, { navigation }) {
   useEffect(() => {
     console.log("Current Delayed Counter: ", delayedIndex)
   }, [delayedIndex])
+
+  useEffect(() => {
+    if (activityToSave.length > 0) {
+      console.log("ACTIVITY ->> ", activityToSave)
+      console.log("Hit -> ", currentIndex)
+      storeActivity(activityToSave).then((savedActivities) => {
+        console.log(savedActivities)
+        dispatch(saveActivities(savedActivities))
+      })
+    }
+  }, [activityToSave])
 
   const grabUserLongitudeAndLatitude = async () => {
     navigator.geolocation.getCurrentPosition(
@@ -299,7 +322,6 @@ export default function Swipe(props, { navigation }) {
                       <StyledText>{item.name}</StyledText>
                       <StyledSecondaryText>{item.rating}/5 from {item.review_count} reviews</StyledSecondaryText>
                       <StyledSecondaryText>{item.price}</StyledSecondaryText>
-
                     </LinearGradient>
                   </Animated.View>
                   <Image

@@ -92,7 +92,6 @@ app.post("/swipe-activities", (req, res) => {
 
 app.get("/business-id-lookup/:id", (req, res) => {
   const id = req.params.id
-  console.log(id)
 
   axios.get(BUSINESS_ID_URL + id, {
     headers: {
