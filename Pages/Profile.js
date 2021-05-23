@@ -6,8 +6,7 @@ import ResultingItem from '../components/ResultingItem';
 import PrimaryButton from '../components/PrimaryButton';
 
 import AuthContext from '../context/auth-context.js';
-import { getSavedActivities, logUserOutOfAccount } from '../context/utility.js';
-import { signOut } from '../context/actions';
+import { getSavedActivities } from '../context/utility.js';
 
 
 const StyledContainer = styled.View`
@@ -71,10 +70,6 @@ export default function Profile({ props, navigation }) {
     navigation.navigate('ChosenItem', { data: itemData, saved: true }) 
   }
 
-  const logOutOfAccount = async () => {
-    logUserOutOfAccount()
-    dispatch(signOut())
-  }
 
   return (
       <StyledContainer>
@@ -84,7 +79,7 @@ export default function Profile({ props, navigation }) {
           <StyledText style={{color: '#fff'}}>@{username}</StyledText>
         </StyledTopBar>
         <StyledBottomBar>
-          <StyledText style={{fontSize: 24, padding: 15}}>Saved Activities</StyledText>
+          <StyledText style={{fontSize: 24}}>Saved Activities</StyledText>
           <FlatList
             data={savedActivities}
             renderItem={({ item }) => (
@@ -100,12 +95,6 @@ export default function Profile({ props, navigation }) {
             )}
             keyExtractor={item => item.id}
           />
-          <PrimaryButton
-            style={{marginBottom: 10, marginTop: 10, alignSelf: 'center'}}
-            text="log out"
-            onPress={() => logOutOfAccount()}
-          />
-
         </StyledBottomBar>
       </StyledContainer>
   );

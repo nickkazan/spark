@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import styled from '../node_modules/styled-components/native';
-import { View, Dimensions, Image, Animated, PanResponder, ImageBackground } from 'react-native';
+import { View, Dimensions, Image, Animated, PanResponder } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import AuthContext from '../context/auth-context.js';
@@ -152,7 +152,6 @@ export default function Swipe(props, { navigation }) {
   }, [])
 
   useEffect(() => {
-    console.log("Current Index Counter: ", currentIndex)
     position.setValue({ x: 0, y: 0 })
 
     // the timeout is purely to allow smooth transitions so the rendering doesn't flicker on the user
@@ -164,13 +163,10 @@ export default function Swipe(props, { navigation }) {
   }, [currentIndex])
 
   useEffect(() => {
-    console.log("Current Delayed Counter: ", delayedIndex)
   }, [delayedIndex])
 
   useEffect(() => {
     if (activityToSave.length > 0) {
-      console.log("ACTIVITY ->> ", activityToSave)
-      console.log("Hit -> ", currentIndex)
       storeActivity(activityToSave).then((savedActivities) => {
         console.log(savedActivities)
         dispatch(saveActivities(savedActivities))
@@ -183,8 +179,7 @@ export default function Swipe(props, { navigation }) {
       position => {
         const dataBeforeStringify = {"latitude": position.coords.latitude, "longitude": position.coords.longitude}
         const data = JSON.stringify(dataBeforeStringify)
-        console.log("DATA: ", data)
-        
+
         fetch('http://192.168.1.67:8080/swipe-activities', {
           method: 'POST',
           headers: {
