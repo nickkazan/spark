@@ -9,10 +9,11 @@ export const getUserData = async () => {
     userToken = await SecureStore.getItemAsync('userToken')
     userData = await SecureStore.getItemAsync('userData')
     savedActivities = await SecureStore.getItemAsync('savedActivitiesIds')
+    colorMode = await SecureStore.getItemAsync('colorMode')
   } catch (e) {
     console.log("failed to find user data locally")
   }
-  return {userToken, userData, savedActivities}
+  return {userToken, userData, savedActivities, colorMode}
 };
 
 export const logUserOutOfAccount = async () => {
@@ -57,6 +58,10 @@ export const getSavedActivities = async () => {
       return allSavedActivities
     })
   }
+}
+
+export const saveColorMode = async (colorMode) => {
+  await SecureStore.setItemAsync('colorMode', colorMode)
 }
 
 export const storeSignInData = async () => {

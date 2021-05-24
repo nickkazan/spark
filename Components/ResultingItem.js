@@ -1,15 +1,17 @@
-import React from '../node_modules/react'
-import styled from '../node_modules/styled-components/native'
+import React from '../node_modules/react';
+import styled from '../node_modules/styled-components/native';
+
+import Colors from '../styles/Colors';
 
 const StyledTouchable = styled.TouchableOpacity`
   flex-direction: row;
-  background-color: #fff;
   align-self: stretch;
   border-radius: 10px;
-  border-color: black;
-  border-width: 2px;
+  border-width: 1px;
   padding-top: 5px;
   padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
   margin-left: 5px;
   margin-right: 5px;
   margin-top: 5px;
@@ -34,7 +36,6 @@ const StyledNameAndAddress = styled.View`
   align-items: center;
   justify-content: space-between;
 `
-
 const StyledImage = styled.Image`
   flex: 1;
   align-self: stretch;
@@ -43,9 +44,7 @@ const StyledImage = styled.Image`
   justify-content: center;
   margin-right: 10px;
   border-radius: 10px;
-  border-color: black;
 `
-
 const StyledTitle = styled.Text`
   font-family: 'Avenir';
   font-size: 22px;
@@ -67,24 +66,25 @@ const StyledRating = styled.Text`
 `
 
 export default function Choice(props, {navigation}) {
+  const color = Colors()
 
   return (
-    <StyledTouchable onPress={props.onPress} style={props.style}>
+    <StyledTouchable onPress={props.onPress} style={{borderColor: color.primaryColor}}>
       <StyledImage source={{uri: props.image}} />
       <StyledInformation>
         <StyledNameAndAddress>
-          <StyledTitle style={props.textStyle}>
+          <StyledTitle style={{color: color.text}}>
             {props.name}
           </StyledTitle>
-          <StyledAddress>
+          <StyledAddress style={{color: color.primaryColor}}>
             {props.address}
           </StyledAddress>
         </StyledNameAndAddress>
         <StyledMetadataRow>
-          <StyledPrice>
+          <StyledPrice style={{color: color.primaryColor}}>
             {props.price}
           </StyledPrice>
-          <StyledRating>
+          <StyledRating style={{color: color.primaryColor}}>
             {props.rating} from {props.review_count} reviews
           </StyledRating>
         </StyledMetadataRow>

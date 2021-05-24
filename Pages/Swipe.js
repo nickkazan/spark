@@ -7,17 +7,17 @@ import AuthContext from '../context/auth-context.js';
 import { storeActivity } from '../context/utility';
 import { saveActivities } from '../context/actions';
 
+import Colors from '../styles/Colors';
+
 
 const StyledContainer = styled.View`
   flex: 1;
   flex-direction: column;
-  background-color: #fff;
 `
 const StyledLabel = styled.Text`
   padding: 10px;
   font-family: "Avenir";
   font-size: 32px;
-  color: black;
   align-self: center;
   border-width: 3px;
   font-weight: 900;
@@ -26,7 +26,6 @@ const StyledText = styled.Text`
   font-family: 'Avenir';
   font-size: 32px;
   padding-bottom: 5px;
-  color: white;
   font-weight: 800;
   align-self: flex-start;
 `
@@ -34,7 +33,6 @@ const StyledSecondaryText = styled.Text`
   font-family: 'Avenir';
   font-size: 24px;
   padding-bottom: 5px;
-  color: #2a9d8f;
   font-weight: 400;
   align-self: flex-start;
 `
@@ -57,6 +55,8 @@ export default function Swipe(props, { navigation }) {
   const [activities, setActivities] = useState([])
   const [activityToSave, setActivityToSave] = useState("")
   const [state, dispatch] = useContext(AuthContext)
+
+  const color = Colors()
 
   const SCREEN_HEIGHT = Dimensions.get('window').height
   const SCREEN_WIDTH = Dimensions.get('window').width
@@ -203,7 +203,7 @@ export default function Swipe(props, { navigation }) {
 
 
   return (
-      <StyledContainer>
+      <StyledContainer style={{backgroundColor: color.background}}>
         <View style={{ flex: 1 }}>
           {/* This is to render a fake card so it has a smooth transition */}
           {activities.length > delayedIndex ? 
@@ -314,9 +314,9 @@ export default function Swipe(props, { navigation }) {
                         borderRadius: 30,
                       }}
                     >
-                      <StyledText>{item.name}</StyledText>
-                      <StyledSecondaryText>{item.rating}/5 from {item.review_count} reviews</StyledSecondaryText>
-                      <StyledSecondaryText>{item.price}</StyledSecondaryText>
+                      <StyledText style={{color: color.white}}>{item.name}</StyledText>
+                      <StyledSecondaryText style={{color: color.primaryColor}}>{item.rating}/5 from {item.review_count} reviews</StyledSecondaryText>
+                      <StyledSecondaryText style={{color: color.primaryColor}}>{item.price}</StyledSecondaryText>
                     </LinearGradient>
                   </Animated.View>
                   <Image

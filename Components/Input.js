@@ -17,7 +17,6 @@ const StyledContainer = styled.View`
 const StyledText = styled.Text`
   font-family: 'Avenir';
   font-size: 18px;
-  color: black;
 `
 const StyledErrorText = styled.Text`
   font-family: 'Avenir';
@@ -37,20 +36,19 @@ const StyledTextInput = styled.TextInput`
   border-bottom-width: 1px;
   font-family: 'Avenir';
   font-size: 18px;
-  color: black;
 `
 
 export default function Input(props) {
   return (
     <StyledContainer>
-      <StyledText>{props.label}</StyledText>
+      <StyledText style={props.textStyle}>{props.label}</StyledText>
       <StyledTextInput
         onChangeText={props.onChangeText}
         value={props.value}
         placeholder={props.placeholder}
         keyboardType={props.keyboardType}
         returnKeyType={props.returnKeyType}
-        style={{borderBottomColor: props.error ? "red" : "green"}}
+        style={[props.inputStyle, {borderBottomColor: props.error ? "red" : "green"}]}
         secureTextEntry={props.secure}
       />
       {props.error ? (

@@ -1,25 +1,24 @@
 import React, { useState, useEffect, useContext } from '../node_modules/react';
 import styled from '../node_modules/styled-components/native';
 import Slider from '@react-native-community/slider';
-
-import AuthContext from '../context/auth-context.js'
-
 import Choice from '../components/Choice';
 import PrimaryButton from '../components/PrimaryButton';
+
+import AuthContext from '../context/auth-context.js';
+
+import Colors from '../styles/Colors';
 
 const StyledContainer = styled.View`
   flex: 10;
   padding-top: 50px;
   padding-bottom: 50px;
   flex-direction: column;
-  background-color: #fff;
   align-items: center;
   justify-content: space-between;
 `
 
 const StyledRowGroups = styled.View`
   flex-direction: column;
-  background-color: #fff;
   align-items: center;
 `
 
@@ -38,7 +37,6 @@ const StyledMessage = styled.Text`
 `
 
 export default function Home({navigation}) {
-  const [state, dispatch] = useContext(AuthContext);
   const listOfCategories = [
     [
       {id: '1000', choiceName: 'Active', categoryCode: 'active', 'isActive': false},
@@ -95,6 +93,10 @@ export default function Home({navigation}) {
   const [longitude, setLongitude] = useState(0.0)
   const [latitude, setLatitude] = useState(0.0)
   const [numberOfChoicesRequested, setNumberOfChoicesRequested] = useState(3)
+
+  const [state, dispatch] = useContext(AuthContext);
+  const color = Colors()
+
 
   useEffect(() => {
     grabUserLongitudeAndLatitude()
@@ -188,26 +190,27 @@ export default function Home({navigation}) {
   }
 
   const inactiveChoiceStyle = {
-    backgroundColor: '#e5e5e5'
+    backgroundColor: color.inactiveTint,
   }
   const activeChoiceStyle = {
-    backgroundColor: '#2a9d8f',
-    color: '#fff'
+    backgroundColor: color.activeTint,
   }
   const inactiveTextStyle = {
-    color: '#000'
+    color: color.black,
+    opacity: 0.7
   }
   const activeTextStyle = {
-    color: '#fff'
+    color: color.white,
+    opacity: 1
   }
 
   return (
-    <StyledContainer>
-      <StyledMessage>
+    <StyledContainer style={{backgroundColor: color.background}}>
+      <StyledMessage style={{color: color.text}}>
         {choiceCounter < titles.length ? titles[choiceCounter][2] : "How many options do you want to see?"}
       </StyledMessage>
       {choiceCounter < titles.length ? 
-        <StyledRowGroups>
+        <StyledRowGroups style={{backgroundColor: color.background}}>
           {
             listOfChoices.map((rowOfItems, rowIndex) => (
               <StyledRow key={rowIndex.toString()}> 
@@ -223,7 +226,7 @@ export default function Home({navigation}) {
         </StyledRowGroups>
       :
         <>
-          <StyledMessage>
+          <StyledMessage style={{color: color.text}}>
             {numberOfChoicesRequested}
           </StyledMessage>
           <Slider
@@ -233,8 +236,8 @@ export default function Home({navigation}) {
             step={1}
             value={numberOfChoicesRequested}
             onValueChange={(value) => setNumberOfChoicesRequested(value)}
-            minimumTrackTintColor="#2a9d8f"
-            maximumTrackTintColor="#000000"
+            minimumTrackTintColor={color.primaryColor}
+            maximumTrackTintColor={color.text}
           />
         </>
       }

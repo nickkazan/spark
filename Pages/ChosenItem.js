@@ -1,18 +1,17 @@
 import { Linking } from 'react-native';
 import React, { useContext } from '../node_modules/react';
 import styled from '../node_modules/styled-components/native';
-
 import Tool from '../components/Tool';
 
 import AuthContext from '../context/auth-context.js';
 import { storeActivity, deleteActivity } from '../context/utility';
 import { saveActivities, deleteActivityById } from '../context/actions';
 
+import Colors from '../styles/Colors';
 
 const StyledContainer = styled.View`
   flex: 10;
   flex-direction: column;
-  background-color: #fff;
   align-items: stretch;
   justify-content: space-between;
 `
@@ -58,13 +57,13 @@ const StyledButtonRow = styled.View`
   justify-content: space-between;
 `
 
-
 export default function ChosenItem({navigation, route}) {
   const [state, dispatch] = useContext(AuthContext);
   const data = route.params.data
   const saved = route.params.saved
   const lengthOfCategories = data.categories.length
-  console.log(lengthOfCategories)
+  
+  const color = Colors()
 
   const openWebsite = () => {
     Linking.canOpenURL(data.url).then(supported => {
@@ -126,24 +125,24 @@ export default function ChosenItem({navigation, route}) {
 
 
   return (
-    <StyledContainer>
+    <StyledContainer style={{backgroundColor: color.background}}>
       <StyledImage source={{uri: data.image_url}}/>
       <StyledInformation>
-        <StyledTitle>
+        <StyledTitle style={{color: color.text}}>
           {data.name}
         </StyledTitle>
         <StyledMetadataRow>
-          <StyledText>
+          <StyledText style={{color: color.primaryColor}}>
             {data.price}
           </StyledText>
-          <StyledText>
+          <StyledText style={{color: color.primaryColor}}>
             {data.rating} from {data.review_count} reviews
           </StyledText>
         </StyledMetadataRow>
         <StyledCategories>
             {
               data.categories.map((item, index) => (
-                <StyledText key={index.toString()}>
+                <StyledText style={{color: color.primaryColor}} key={index.toString()}>
                   {(index + 1) == lengthOfCategories ? item.title : item.title + ", "}
                 </StyledText>
               ))

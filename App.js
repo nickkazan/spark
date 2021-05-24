@@ -8,8 +8,9 @@ import { stateReducer, initialState } from './context/reducers';
 import { restoreToken } from './context/actions';
 import { getUserData } from './context/utility';
 
-import NavTab from './navigation/NavTab'
-import AuthenticationStack from './navigation/AuthenticationStack'
+import NavTab from './navigation/NavTab';
+import AuthenticationStack from './navigation/AuthenticationStack';
+
 
 Amplify.configure(awsconfig)
 
@@ -26,7 +27,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    dispatch(restoreToken(fullUserData.userToken, fullUserData.userData, fullUserData.savedActivities))
+    dispatch(restoreToken(fullUserData.userToken, fullUserData.userData, fullUserData.savedActivities, fullUserData.colorMode))
   }, [fullUserData])
 
   return (

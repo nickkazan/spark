@@ -2,8 +2,9 @@ import React from '../node_modules/react';
 import styled from '../node_modules/styled-components/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import Colors from '../styles/Colors';
+
 const StyledTouchable = styled.TouchableOpacity`
-    background-color: #2a9d8f;
     align-items: center;
     width: 65px;
     justify-content: center;
@@ -16,15 +17,11 @@ const StyledTouchable = styled.TouchableOpacity`
     margin-right: 15px;
 `
 
-const StyledText = styled.Text`
-  font-family: 'Avenir';
-  font-size: 18px;
-  color: #fff;
-`
-
 export default function Tool(props) {
+  const color = Colors()
+
   return (
-    <StyledTouchable onPress={props.onPress} style={props.style}>
+    <StyledTouchable onPress={props.onPress} style={{backgroundColor: color.primaryColor}}>
       <MaterialCommunityIcons name={props.name} color="white" size={35} />
     </StyledTouchable>
   )

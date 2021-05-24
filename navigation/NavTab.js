@@ -5,14 +5,18 @@ import HomeStack from '../navigation/HomeStack';
 import ProfileStack from '../navigation/ProfileStack';
 import SwipeStack from './SwipeStack';
 
+import Colors from '../styles/Colors';
+
 const Tab = createBottomTabNavigator();
 
 export default function NavTab() {
+  const color = Colors()
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
       tabBarOptions={{
-        activeTintColor: '#2a9d8f',
+        activeTintColor: color.primaryColor,
         showLabel: false,
         tabStyle: {
           width: 100
@@ -21,7 +25,7 @@ export default function NavTab() {
           width: 35,
           height: 60
         },
-        style: { height: 50 },
+        style: { height: 50, backgroundColor: color.background, borderTopWidth: 0 },
       }}
     >
       <Tab.Screen

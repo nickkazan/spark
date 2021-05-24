@@ -2,13 +2,14 @@ import React, { useState, useContext } from "react";
 import styled from '../node_modules/styled-components/native';
 import { View } from "react-native";
 import { Auth } from "aws-amplify";
+import PrimaryButton from "../components/PrimaryButton";
+import Input from "../components/Input";
 
 import AuthContext from '../context/auth-context.js';
 import { signIn } from '../context/actions';
 import { storeSignInData } from '../context/utility';
 
-import PrimaryButton from "../components/PrimaryButton";
-import Input from "../components/Input";
+import Colors from '../styles/Colors';
 
 const StyledText = styled.Text`
   padding-left: 16px;
@@ -35,6 +36,7 @@ export default function Signin({ navigation }) {
   const [unknownLogin, setUnknownLogin] = useState(false)
   const [state, dispatch] = useContext(AuthContext);
 
+  const color = Colors()
 
   const inputIsValid = () =>
     username !== "" && password !== "" && !passwordIsInvalid()
@@ -72,62 +74,64 @@ export default function Signin({ navigation }) {
   }
 
   return (
-      <View>
-        <View>
-          <StyledText style={{alignSelf: "center", paddingTop: 30, paddingBottom: 30, fontSize: 24}}>
-            Welcome back to Spark
+    <View style={{backgroundColor: color.background, height: '100%'}}>
+      <StyledText style={{alignSelf: "center", paddingTop: 30, paddingBottom: 30, fontSize: 24, color: color.text}}>
+        Welcome back to Spark
+      </StyledText>
+      <Input
+        label="username"
+        value={username}
+        error={
+          username.trim() === ""
+            ? "mandatory field"
+            : username.trim().includes(" ")
+            ? "invalid characters"
+            : username.length < 2
+            ? "too short"
+            : unknownLogin === true
+            ? "login doesn't exist"
+            : false
+        }
+        textStyle={{color: color.text}}
+        inputStyle={{color: color.primaryColor}}
+        onChangeText={(val) => handleUsernameOnChange(val)}
+      />
+      <Input
+        secure={true}
+        label="password"
+        value={password}
+        error={
+          password.trim() === ""
+            ? "mandatory field"
+            : password.trim().includes(" ")
+            ? "invalid characters"
+            : password.length < 8
+            ? "too short"
+            : passwordIsInvalid()
+            ? "needs a special character, number, lowercase and capital letter"
+            : unknownLogin === true
+            ? "login doesn't exist"
+            : false
+        }
+        textStyle={{color: color.text}}
+        inputStyle={{color: color.primaryColor}}
+        onChangeText={(val) => setPassword(val)}
+      />
+      <StyledActions>
+        <>
+          <StyledText
+            onPress={() => navigation.navigate('Signup')}
+            style={{color: color.primaryColor}}
+          >
+            I'm new here
           </StyledText>
-          <Input
-            label="username"
-            value={username}
-            error={
-              username.trim() === ""
-                ? "mandatory field"
-                : username.trim().includes(" ")
-                ? "invalid characters"
-                : username.length < 2
-                ? "too short"
-                : unknownLogin === true
-                ? "login doesn't exist"
-                : false
-            }
-            onChangeText={(val) => handleUsernameOnChange(val)}
+          <PrimaryButton
+            text="login"
+            disabled={!inputIsValid()}
+            onPress={ async () => { await handleSignIn(username, password) } }
           />
-          <Input
-            secure={true}
-            label="password"
-            value={password}
-            error={
-              password.trim() === ""
-                ? "mandatory field"
-                : password.trim().includes(" ")
-                ? "invalid characters"
-                : password.length < 8
-                ? "too short"
-                : passwordIsInvalid()
-                ? "needs a special character, number, lowercase and capital letter"
-                : unknownLogin === true
-                ? "login doesn't exist"
-                : false
-            }
-            onChangeText={(val) => setPassword(val)}
-          />
-          <StyledActions>
-            <>
-              <StyledText
-                onPress={() => navigation.navigate('Signup')}
-                style={{color: "#2a9d8f"}}
-              >
-                I'm new here
-              </StyledText>
-              <PrimaryButton
-                text="login"
-                disabled={!inputIsValid()}
-                onPress={ async () => { await handleSignIn(username, password) } }
-              />
-            </>
-          </StyledActions>
-        </View>
-      </View>
+        </>
+      </StyledActions>
+    </View>
   );
 };

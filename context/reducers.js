@@ -5,6 +5,7 @@ export const initialState = {
   isSignedIn: false,
   userToken: null,
   userData: null,
+  colorMode: "DEFAULT",
   savedActivities: []
 };
 
@@ -16,8 +17,14 @@ export const stateReducer = (state, action) => {
         isSignedIn: true,
         userToken: action.userToken,
         userData: action.userData,
-        savedActivities: action.savedActivities
+        savedActivities: action.savedActivities,
+        colorMode: action.colorMode
       };
+    case actionTypes.CHANGE_THEME:
+      return {
+        ...state,
+        colorMode: action.colorMode
+      }
     case actionTypes.SIGN_IN:
       return {
         ...state,
@@ -33,7 +40,7 @@ export const stateReducer = (state, action) => {
         isSignedIn: false,
         userToken: null,
         userData: null,
-        savedActivities: null
+        savedActivities: null,
       };
     case actionTypes.SAVE_ACTIVITIES:
       return {

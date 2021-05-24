@@ -1,9 +1,8 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from '../node_modules/styled-components/native';
-import { Auth } from "aws-amplify";
-import { FlatList, SafeAreaView } from 'react-native';
+import { FlatList } from 'react-native';
 import ResultingItem from '../components/ResultingItem';
-import PrimaryButton from '../components/PrimaryButton';
+import Colors from '../styles/Colors';
 
 import AuthContext from '../context/auth-context.js';
 import { getSavedActivities } from '../context/utility.js';
@@ -12,7 +11,6 @@ import { getSavedActivities } from '../context/utility.js';
 const StyledContainer = styled.View`
   flex: 10;
   flex-direction: column;
-  background-color: #fff;
   align-items: center;
   justify-content: space-between;
 `
@@ -21,7 +19,6 @@ const StyledText = styled.Text`
   padding-right: 16px;
   font-family: "Avenir";
   font-size: 18px;
-  color: black;
   align-self: center;
 `
 const StyledTopBar = styled.View`
@@ -31,7 +28,6 @@ const StyledTopBar = styled.View`
   padding-bottom: 10px;
   margin-bottom: 10px;
   flex-direction: column;
-  background-color: #2a9d8f;
   align-items: center;
   justify-content: space-between;
 `
@@ -39,7 +35,6 @@ const StyledBottomBar = styled.View`
   flex: 8;
   width: 100%;
   flex-direction: column;
-  background-color: #fff;
   align-items: stretch;
 `
 
@@ -51,6 +46,7 @@ export default function Profile({ props, navigation }) {
   const [savedActivities, setSavedActivities] = useState([])
 
   const [state, dispatch] = useContext(AuthContext);
+  const color = Colors()
 
   useEffect(() => {
     fetchUserData()
@@ -72,14 +68,14 @@ export default function Profile({ props, navigation }) {
 
 
   return (
-      <StyledContainer>
-        <StyledTopBar>
-          <StyledText style={{color: '#fff'}}>{firstName + " " + lastName}</StyledText>
-          <StyledText style={{color: '#fff'}}>{email}</StyledText>
-          <StyledText style={{color: '#fff'}}>@{username}</StyledText>
+      <StyledContainer style={{backgroundColor: color.background}}>
+        <StyledTopBar style={{backgroundColor: color.primaryColor}}>
+          <StyledText style={{color: color.white}}>{firstName + " " + lastName}</StyledText>
+          <StyledText style={{color: color.white}}>{email}</StyledText>
+          <StyledText style={{color: color.white}}>@{username}</StyledText>
         </StyledTopBar>
-        <StyledBottomBar>
-          <StyledText style={{fontSize: 24}}>Saved Activities</StyledText>
+        <StyledBottomBar style={{backgroundColor: color.background}}>
+          <StyledText style={{fontSize: 24, color: color.text}}>Saved Activities</StyledText>
           <FlatList
             data={savedActivities}
             renderItem={({ item }) => (

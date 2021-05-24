@@ -2,14 +2,15 @@ import React, { useState, useContext } from "react";
 import styled from '../node_modules/styled-components/native';
 import { View } from "react-native";
 import { Auth } from "aws-amplify";
+import PrimaryButton from "../components/PrimaryButton";
+import Input from "../components/Input";
+import ConfirmSignup from "./ConfirmSignup";
 
 import AuthContext from '../context/auth-context.js'
 import { signIn } from '../context/actions';
 import { storeSignInData } from '../context/utility';
 
-import PrimaryButton from "../components/PrimaryButton";
-import Input from "../components/Input";
-import ConfirmSignup from "./ConfirmSignup";
+import Colors from '../styles/Colors';
 
 const StyledText = styled.Text`
   padding-left: 16px;
@@ -17,7 +18,6 @@ const StyledText = styled.Text`
   padding-bottom: 16px;
   font-family: "Avenir";
   font-size: 18px;
-  color: black;
 `
 const StyledActions = styled.View`
   display: flex;
@@ -40,6 +40,7 @@ export default function Signup({ props, navigation }) {
   const [confirmSignupPage, setConfirmSignupPage] = useState(false)
   const [state, dispatch] = useContext(AuthContext);
 
+  const color = Colors()
 
   const handleSignupAttempt = async (email, username, password) => {
     const clearFirstName = firstName.trim()
@@ -118,10 +119,10 @@ export default function Signup({ props, navigation }) {
   const handleCode = (val) => setCode(val)
 
   return (
-      <View>
+      <View style={{backgroundColor: color.background}}>
         {!confirmSignupPage ?
         <View>
-          <StyledText style={{alignSelf: "center", paddingTop: 15, paddingBottom: 15, fontSize: 24}}>
+          <StyledText style={{alignSelf: "center", paddingTop: 15, paddingBottom: 15, fontSize: 24, color: color.text}}>
             Welcome to Spark
           </StyledText>
           <Input
@@ -136,6 +137,8 @@ export default function Signup({ props, navigation }) {
                 ? "too short"
                 : false
             }
+            textStyle={{color: color.text}}
+            inputStyle={{color: color.primaryColor}}
             onChangeText={(val) => setFirstName(val)}
           />
           <Input
@@ -150,6 +153,8 @@ export default function Signup({ props, navigation }) {
                 ? "too short"
                 : false
             }
+            textStyle={{color: color.text}}
+            inputStyle={{color: color.primaryColor}}
             onChangeText={(val) => setLastName(val)}
           />
           <Input
@@ -157,6 +162,8 @@ export default function Signup({ props, navigation }) {
             error={emailIsInvalid()}
             value={email}
             onChangeText={(val) => setEmail(val)}
+            textStyle={{color: color.text}}
+            inputStyle={{color: color.primaryColor}}
           />
           <Input
             label="username"
@@ -170,6 +177,8 @@ export default function Signup({ props, navigation }) {
                 ? "too short"
                 : false
             }
+            textStyle={{color: color.text}}
+            inputStyle={{color: color.primaryColor}}
             onChangeText={(val) => setUsername(val)}
           />
           <Input
@@ -187,13 +196,15 @@ export default function Signup({ props, navigation }) {
                 ? "needs a special character, number, lowercase and capital letter"
                 : false
             }
+            textStyle={{color: color.text}}
+            inputStyle={{color: color.primaryColor}}
             onChangeText={(val) => setPassword(val)}
           />
           <StyledActions>
             <>
               <StyledText
                 onPress={() => navigation.navigate('Signin')}
-                style={{color: "#2a9d8f"}}
+                style={{color: color.primaryColor}}
               >
                 I have an account
               </StyledText>

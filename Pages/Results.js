@@ -1,25 +1,27 @@
-import { FlatList, SafeAreaView } from 'react-native'
-import React from '../node_modules/react'
-import styled from '../node_modules/styled-components/native'
+import { FlatList, SafeAreaView } from 'react-native';
+import React from '../node_modules/react';
+import styled from '../node_modules/styled-components/native';
+import ResultingItem from '../components/ResultingItem';
 
-import ResultingItem from '../components/ResultingItem'
+import Colors from '../styles/Colors';
 
 const StyledContainer = styled.View`
   flex: 10;
   flex-direction: column;
-  background-color: #fff;
   align-items: stretch;
   justify-content: space-between;
 `
 
 export default function Results({ navigation, route }) {
+  const color = Colors()
+
   const selectItem = (itemData) => {
     navigation.navigate('ChosenItem', { data: itemData }) 
   }
 
 
   return (
-    <StyledContainer>
+    <StyledContainer style={{backgroundColor: color.background}}>
       <SafeAreaView>
         <FlatList
           data={route.params.data}
