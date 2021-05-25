@@ -1,12 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
 import styled from '../node_modules/styled-components/native';
-import { FlatList } from 'react-native';
+import { FlatList, Button, Image } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import ResultingItem from '../components/ResultingItem';
 import Colors from '../styles/Colors';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import AuthContext from '../context/auth-context.js';
-import { getSavedActivities } from '../context/utility.js';
+import { changeProfilePicture } from '../context/actions';
+import { getSavedActivities, saveProfilePicture } from '../context/utility.js';
 
+const IMAGE_DIMENSIONS = 125
 
 const StyledContainer = styled.View`
   flex: 10;
@@ -19,23 +23,40 @@ const StyledText = styled.Text`
   padding-right: 16px;
   font-family: "Avenir";
   font-size: 18px;
-  align-self: center;
 `
 const StyledTopBar = styled.View`
   flex: 2;
   width: 100%;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
   margin-bottom: 10px;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
+`
+const StyledTextTopBar = styled.View`
+  flex: 2;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
 `
 const StyledBottomBar = styled.View`
   flex: 8;
   width: 100%;
   flex-direction: column;
   align-items: stretch;
+`
+const StyledTouchableOpacity = styled.TouchableOpacity`
+  width: ${IMAGE_DIMENSIONS}px;
+  height: ${IMAGE_DIMENSIONS}px;
+  border-radius: ${IMAGE_DIMENSIONS/2}px;
+  background-color: black;
+  align-items: center;
+  justify-content: center;
+`
+const StyledProfilePicture = styled.Image`
+  width: ${IMAGE_DIMENSIONS}px;
+  height: ${IMAGE_DIMENSIONS}px;
+  border-radius: ${IMAGE_DIMENSIONS/2}px;
 `
 
 export default function Profile({ props, navigation }) {
@@ -44,6 +65,7 @@ export default function Profile({ props, navigation }) {
   const [email, setEmail] = useState("")
   const [username, setUsername] = useState("")
   const [savedActivities, setSavedActivities] = useState([])
+  const [profilePicture, setProfilePicture] = useState(null)
 
   const [state, dispatch] = useContext(AuthContext);
   const color = Colors()
@@ -60,22 +82,48 @@ export default function Profile({ props, navigation }) {
     setLastName(parsedUserData['lastName'])
     setEmail(parsedUserData['email'])
     setUsername(parsedUserData['username'])
+    setProfilePicture(state.profilePicture)
   }
 
   const selectItem = (itemData) => {
     navigation.navigate('ChosenItem', { data: itemData, saved: true }) 
   }
 
+  const handleChoosePhoto = async () => {
+    let response = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true
+    })
+
+    if (!response.cancelled) {
+      setProfilePicture(response.uri)
+      dispatch(changeProfilePicture(response.uri))
+      saveProfilePicture(response.uri)
+    }
+  };
+
 
   return (
       <StyledContainer style={{backgroundColor: color.background}}>
         <StyledTopBar style={{backgroundColor: color.primaryColor}}>
-          <StyledText style={{color: color.white}}>{firstName + " " + lastName}</StyledText>
-          <StyledText style={{color: color.white}}>{email}</StyledText>
-          <StyledText style={{color: color.white}}>@{username}</StyledText>
+          <StyledTouchableOpacity onPress={handleChoosePhoto}>
+            {profilePicture
+            ?
+              <StyledProfilePicture
+                source={{ uri: profilePicture }}
+              />            
+            :
+              <MaterialCommunityIcons name="camera" color="white" size={35} />
+            }
+          </StyledTouchableOpacity>
+          <StyledTextTopBar>
+            <StyledText style={{color: color.white}}>{firstName + " " + lastName}</StyledText>
+            <StyledText style={{color: color.white}}>{email}</StyledText>
+            <StyledText style={{color: color.white}}>@{username}</StyledText>
+          </StyledTextTopBar>
         </StyledTopBar>
         <StyledBottomBar style={{backgroundColor: color.background}}>
-          <StyledText style={{fontSize: 24, color: color.text}}>Saved Activities</StyledText>
+          <StyledText style={{fontSize: 24, color: color.text, alignSelf: 'center'}}>Saved Activities</StyledText>
           <FlatList
             data={savedActivities}
             renderItem={({ item }) => (

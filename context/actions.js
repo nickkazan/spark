@@ -1,18 +1,20 @@
 export const actionTypes = {
   RESTORE_TOKEN: 'RESTORE_TOKEN',
   CHANGE_THEME: 'CHANGE_THEME',
+  CHANGE_PROFILE_PICTURE: 'CHANGE_PROFILE_PICTURE',
   SIGN_IN: 'SIGN_IN',
   SIGN_OUT: 'SIGN_OUT',
   SAVE_ACTIVITIES: 'SAVE_ACTIVITIES',
   DELETE_ACTIVITY: 'DELETE_ACTIVITY'
 };
 
-export const restoreToken = (userToken, userData, savedActivities, colorMode) => ({
+export const restoreToken = (userToken, userData, savedActivities, colorMode, profilePicture) => ({
   type: actionTypes.RESTORE_TOKEN,
   userToken,
   userData,
   savedActivities,
-  colorMode
+  colorMode,
+  profilePicture
 });
 
 export const changeTheme = (colorMode) => ({
@@ -20,10 +22,15 @@ export const changeTheme = (colorMode) => ({
   colorMode
 })
 
+export const changeProfilePicture = (profilePicture) => ({
+  type: actionTypes.SAVE_PROFILE_PICTURE,
+  profilePicture
+})
+
 export const signIn = (userToken, userData) => ({
   type: actionTypes.SIGN_IN,
   userToken,
-  userData
+  userData,
 })
 
 export const signOut = () => ({

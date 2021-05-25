@@ -6,7 +6,8 @@ export const initialState = {
   userToken: null,
   userData: null,
   colorMode: "DEFAULT",
-  savedActivities: []
+  savedActivities: [],
+  profilePicture: null
 };
 
 export const stateReducer = (state, action) => {
@@ -18,12 +19,18 @@ export const stateReducer = (state, action) => {
         userToken: action.userToken,
         userData: action.userData,
         savedActivities: action.savedActivities,
-        colorMode: action.colorMode
+        colorMode: action.colorMode,
+        profilePicture: action.profilePicture
       };
     case actionTypes.CHANGE_THEME:
       return {
         ...state,
         colorMode: action.colorMode
+      }
+    case actionTypes.CHANGE_PROFILE_PICTURE:
+      return {
+        ...state,
+        profilePicture: action.profilePicture
       }
     case actionTypes.SIGN_IN:
       return {
@@ -41,6 +48,7 @@ export const stateReducer = (state, action) => {
         userToken: null,
         userData: null,
         savedActivities: null,
+        profilePicture: action.profilePicture
       };
     case actionTypes.SAVE_ACTIVITIES:
       return {

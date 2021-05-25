@@ -27,7 +27,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    dispatch(restoreToken(fullUserData.userToken, fullUserData.userData, fullUserData.savedActivities, fullUserData.colorMode))
+    dispatch(restoreToken(fullUserData.userToken, fullUserData.userData, fullUserData.savedActivities, fullUserData.colorMode, fullUserData.profilePicture))
   }, [fullUserData])
 
   return (

@@ -10,10 +10,11 @@ export const getUserData = async () => {
     userData = await SecureStore.getItemAsync('userData')
     savedActivities = await SecureStore.getItemAsync('savedActivitiesIds')
     colorMode = await SecureStore.getItemAsync('colorMode')
+    profilePicture = await SecureStore.getItemAsync('profilePicture')
   } catch (e) {
     console.log("failed to find user data locally")
   }
-  return {userToken, userData, savedActivities, colorMode}
+  return {userToken, userData, savedActivities, colorMode, profilePicture}
 };
 
 export const logUserOutOfAccount = async () => {
@@ -21,6 +22,7 @@ export const logUserOutOfAccount = async () => {
     await SecureStore.deleteItemAsync('userToken')
     await SecureStore.deleteItemAsync('userData')
     await SecureStore.deleteItemAsync('savedActivitiesIds')
+    await SecureStore.deleteItemAsync('profilePicture')
   } catch (e) {
     console.log("failed to delete local user information")
   }
@@ -62,6 +64,10 @@ export const getSavedActivities = async () => {
 
 export const saveColorMode = async (colorMode) => {
   await SecureStore.setItemAsync('colorMode', colorMode)
+}
+
+export const saveProfilePicture = async (profilePicture) => {
+  await SecureStore.setItemAsync('profilePicture', profilePicture)
 }
 
 export const storeSignInData = async () => {
