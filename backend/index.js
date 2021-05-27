@@ -113,7 +113,7 @@ app.post("/put-activity", async (req, res) => {
   const body = req.body;
   console.log(body)
   if (body && body.username && body.activityId) {
-    await activityDao.putActivity(body.username, body.activityId);
+    await activityDao.putActivity(body.username, body.activityId)
     res.status(200).json({
       success: "The activity was stored"
     });
@@ -123,6 +123,19 @@ app.post("/put-activity", async (req, res) => {
     })
   }
 });
+
+app.get("/get-activities/:username", async (req, res) => {
+  console.log("Entered API endpoint...")
+  const username = req.params.username
+  if (username) {
+    const response = await activityDao.getActivities(username)
+    res.status(200).send(response)
+  } else {
+    res.status(400).json({
+      error: "The activities failed to retrieve"
+    })
+  }
+})
 
 app.listen(PORT, () => {
   console.log("Server is listening on port: ", PORT)

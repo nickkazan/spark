@@ -17,8 +17,6 @@ async function putActivity(username, activityId) {
   
   // Generate timestamp
   const timestamp = Math.floor(Date.now() / 1000)
-  console.log(username)
-  console.log(activityId)
 
   var params = {
       TableName: TABLE,
@@ -37,22 +35,22 @@ async function putActivity(username, activityId) {
   });
 }
 
-// async function getActivities(receiverId) {
-//     var client = new AWS.DynamoDB.DocumentClient();
-//     var params = {
-//         TableName : TABLE,
-//         KeyConditionExpression: "#receiver = :value",
-//         ExpressionAttributeNames:{
-//             "#receiver": "receiver_id"
-//         },
-//         ExpressionAttributeValues: {
-//             ":value": receiverId
-//         }
-//     };
+async function getActivities(username) {
+    var client = new AWS.DynamoDB.DocumentClient();
+    var params = {
+        TableName : TABLE,
+        KeyConditionExpression: "#username = :value",
+        ExpressionAttributeNames:{
+            "#username": "username"
+        },
+        ExpressionAttributeValues: {
+            ":value": username
+        }
+    };
     
-//     var data = await client.query(params).promise()
-//     return data.Items
-// }
+    const data = await client.query(params).promise()
+    return data.Items
+}
 
 // async function deleteActivity(activity_id) {
 //     var client = new AWS.DynamoDB.DocumentClient();
@@ -101,7 +99,7 @@ async function putActivity(username, activityId) {
 
 module.exports = {
     putActivity,
-    // getActivities,
+    getActivities,
     // deleteActivity,
     // deleteActivities
 };

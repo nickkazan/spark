@@ -30,9 +30,31 @@ export const logUserOutOfAccount = async () => {
   }
 }
 
+export const getSavedActivitiesFromDynamo = async (username) => {
+  const URL = "http://192.168.1.67:8080/get-activities/" + username
+  return new Promise((resolve, reject) => {
+    fetch(URL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },      
+    })
+    .then((response) => {
+      response.json().then((data) => {
+        return resolve(data)
+      });
+    })
+    .catch((error) => {
+      reject(error)
+      console.error(error)
+    });
+  })
+}
+
 export const getSavedActivities = async () => {
   const requestData = async (id) => {
     let URL = "http://192.168.1.67:8080/business-id-lookup/" + id
+
     return new Promise((resolve, reject) => {
       fetch(URL, {
         method: 'GET',
@@ -109,6 +131,10 @@ export const storeSignInData = async () => {
 
   return {userToken, userData: formattedUserData}
 };
+
+export const storeActivitiesFromDynamo = async (savedActivitiesIds) => {
+  await SecureStore.setItemAsync('savedActivitiesIds', JSON.stringify(savedActivitiesIds))
+}
 
 export const storeActivity = async (username, activityId) => {
   let savedActivities = []

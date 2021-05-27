@@ -38,8 +38,7 @@ export const stateReducer = (state, action) => {
         isSignedIn: true,
         userToken: action.userToken,
         userData: action.userData,
-        // savedActivities: action.savedActivities
-        // At some point, this will need to be persistent across logins
+        savedActivities: action.savedActivities
       };
     case actionTypes.SIGN_OUT:
       return {
@@ -47,7 +46,7 @@ export const stateReducer = (state, action) => {
         isSignedIn: false,
         userToken: null,
         userData: null,
-        savedActivities: null,
+        savedActivities: [],
         profilePicture: action.profilePicture
       };
     case actionTypes.SAVE_ACTIVITIES:

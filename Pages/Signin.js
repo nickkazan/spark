@@ -7,7 +7,7 @@ import Input from "../components/Input";
 
 import AuthContext from '../context/auth-context.js';
 import { signIn } from '../context/actions';
-import { storeSignInData } from '../context/utility';
+import { storeSignInData, getSavedActivitiesFromDynamo, storeActivitiesFromDynamo } from '../context/utility';
 
 import Colors from '../styles/Colors';
 
@@ -53,10 +53,20 @@ export default function Signin({ navigation }) {
   }
 
   const handleSignIn = async (username, password) => {
+    const parseSavedActivities = (savedActivities) => {
+      let activityIds = []
+      savedActivities.forEach(item => {
+        activityIds.push(item.activity_id)
+      })
+      return activityIds
+    }
+
     try {
       await Auth.signIn(username, password)
       const {userToken, userData} = await storeSignInData()
-      dispatch(signIn(userToken, userData))
+      savedActivitiesIds = parseSavedActivities(await getSavedActivitiesFromDynamo(JSON.parse(userData)['username']))
+      storeActivitiesFromDynamo(savedActivitiesIds)
+      dispatch(signIn(userToken, userData, savedActivitiesIds))
     } catch (error) {
       console.log("error signing in", error)
       setUnknownLogin(true)

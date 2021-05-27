@@ -27,10 +27,11 @@ export const changeProfilePicture = (profilePicture) => ({
   profilePicture
 })
 
-export const signIn = (userToken, userData) => ({
+export const signIn = (userToken, userData, savedActivities) => ({
   type: actionTypes.SIGN_IN,
   userToken,
   userData,
+  savedActivities
 })
 
 export const signOut = () => ({
