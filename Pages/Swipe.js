@@ -114,8 +114,6 @@ export default function Swipe(props, { navigation }) {
             restDisplacementThreshold: 40
           }).start(() => {
             // saveActivityToProfile()
-            let frozenIndex = currentIndex
-            console.log("FI ", frozenIndex)
             setCurrentIndex(currentIndex => {
               setActivities(activities => {
                 setActivityToSave(activities[currentIndex].id)
@@ -167,8 +165,8 @@ export default function Swipe(props, { navigation }) {
 
   useEffect(() => {
     if (activityToSave.length > 0) {
-      storeActivity(activityToSave).then((savedActivities) => {
-        console.log(savedActivities)
+      const username = JSON.parse(state.userData).username
+      storeActivity(username, activityToSave).then((savedActivities) => {
         dispatch(saveActivities(savedActivities))
       })
     }

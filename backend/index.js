@@ -2,6 +2,7 @@ const express = require("express")
 require("dotenv").config()
 const ck = require("ckey")
 const axios = require('axios')
+const activityDao = require("./activityDao")
 
 const PORT = 8080
 const SEARCH_URL =  "https://api.yelp.com/v3/businesses/search"
@@ -100,13 +101,27 @@ app.get("/business-id-lookup/:id", (req, res) => {
     },
   })
   .then((response) => {
-    console.log("Business Data: ", response.data)
     res.send(JSON.stringify(response.data))
   })
   .catch((err) => {
     console.error(err.response)
   })
+});
 
+app.post("/put-activity", async (req, res) => {
+  console.log("HIT")
+  const body = req.body;
+  console.log(body)
+  if (body && body.username && body.activityId) {
+    await activityDao.putActivity(body.username, body.activityId);
+    res.status(200).json({
+      success: "The activity was stored"
+    });
+  } else {
+    return res.status(400).json({
+      error: "The activity failed to store"
+    })
+  }
 });
 
 app.listen(PORT, () => {

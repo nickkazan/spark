@@ -40,7 +40,6 @@ const StyledImage = styled.Image`
   flex: 1;
   align-self: stretch;
   align-items: center;
-  margin-left: 5px;
   justify-content: center;
   margin-right: 10px;
   border-radius: 10px;

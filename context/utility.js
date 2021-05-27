@@ -5,10 +5,12 @@ export const getUserData = async () => {
   let userToken
   let userData
   let savedActivities
+  let colorMode
+  let profilePicture
   try {
     userToken = await SecureStore.getItemAsync('userToken')
     userData = await SecureStore.getItemAsync('userData')
-    savedActivities = await SecureStore.getItemAsync('savedActivitiesIds')
+    savedActivities = JSON.parse(await SecureStore.getItemAsync('savedActivitiesIds'))
     colorMode = await SecureStore.getItemAsync('colorMode')
     profilePicture = await SecureStore.getItemAsync('profilePicture')
   } catch (e) {
@@ -44,11 +46,11 @@ export const getSavedActivities = async () => {
         });
       })
       .catch((error) => {
+        reject(error)
         console.error(error)
       });
     })
   }
-
   let savedActivitiesIdsJSON = await SecureStore.getItemAsync('savedActivitiesIds')
   let savedActivitiesIds = JSON.parse(savedActivitiesIdsJSON)
   let savedActivities = []
@@ -59,7 +61,28 @@ export const getSavedActivities = async () => {
     return Promise.all(savedActivities).then((allSavedActivities) => {
       return allSavedActivities
     })
+  } else {
+    return savedActivities
   }
+}
+
+export const getSavedActivityById = async (id) => {
+  console.log(`Grabbing data for ${id}...`)
+  let URL = "http://192.168.1.67:8080/business-id-lookup/" + id
+  return new Promise((resolve, reject) => {
+    fetch(URL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      response.json().then((data) => {
+        return resolve(data)
+      });
+    }).catch((error) => {
+      console.error(error)
+    });  
+  })
 }
 
 export const saveColorMode = async (colorMode) => {
@@ -87,10 +110,11 @@ export const storeSignInData = async () => {
   return {userToken, userData: formattedUserData}
 };
 
-export const storeActivity = async (activityId) => {
+export const storeActivity = async (username, activityId) => {
   let savedActivities = []
   try { 
     const currentSavedActivities =  await SecureStore.getItemAsync('savedActivitiesIds')
+
     if (JSON.parse(currentSavedActivities)) {
       savedActivities = JSON.parse(currentSavedActivities)
     }
@@ -99,7 +123,22 @@ export const storeActivity = async (activityId) => {
   }
   if (!savedActivities.includes(activityId)) {
     savedActivities.push(activityId)
-    await SecureStore.setItemAsync('savedActivitiesIds', JSON.stringify(savedActivities))  
+    SecureStore.setItemAsync('savedActivitiesIds', JSON.stringify(savedActivities))
+    fetch('http://192.168.1.67:8080/put-activity', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },      
+      body: JSON.stringify({username, activityId})
+    })
+    .then((response) => {
+      response.json().then((data) => {
+        console.log(data)
+      });
+    })
+    .catch((error) => {
+      console.error(error)
+    });
   }
   return savedActivities
 }

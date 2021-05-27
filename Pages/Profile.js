@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import styled from '../node_modules/styled-components/native';
 import { FlatList, Button, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
@@ -8,7 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import AuthContext from '../context/auth-context.js';
 import { changeProfilePicture } from '../context/actions';
-import { getSavedActivities, saveProfilePicture } from '../context/utility.js';
+import { getSavedActivities, getSavedActivityById, saveProfilePicture } from '../context/utility.js';
 
 const IMAGE_DIMENSIONS = 125
 
@@ -59,21 +59,51 @@ const StyledProfilePicture = styled.Image`
   border-radius: ${IMAGE_DIMENSIONS/2}px;
 `
 
-export default function Profile({ props, navigation }) {
+export default function Profile({ navigation }) {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [username, setUsername] = useState("")
   const [savedActivities, setSavedActivities] = useState([])
+  const [activityIdsAlreadyAdded, setActivityIdsAlreadyAdded] = useState([])
   const [profilePicture, setProfilePicture] = useState(null)
 
-  const [state, dispatch] = useContext(AuthContext);
+  const firstRender = useRef(true)
+  const [state, dispatch] = useContext(AuthContext)
   const color = Colors()
 
   useEffect(() => {
     fetchUserData()
-    getSavedActivities().then((activities) => { setSavedActivities(activities) })
-  }, [state.userData, state.savedActivities])
+  }, [state.userData])
+
+  useEffect(() => {
+    getSavedActivities().then((activities) => {
+      let savedActivitiesIdsAlreadyAdded = []
+      setSavedActivities(activities)
+      for (const activity of activities) {
+        savedActivitiesIdsAlreadyAdded.push(activity.id)
+      }
+      setActivityIdsAlreadyAdded(savedActivitiesIdsAlreadyAdded)
+    }).catch((err) => {
+      console.error(err)
+    })
+  }, [])
+
+  useEffect(() => {
+    console.log(`State was changed to ${state.savedActivities}`)
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    } else {
+      const newIds = state.savedActivities.slice(activityIdsAlreadyAdded.length)
+      for (const id of newIds) {
+        getSavedActivityById(id).then((newActivityData) => {
+          setSavedActivities([...savedActivities, newActivityData])
+          setActivityIdsAlreadyAdded([...activityIdsAlreadyAdded, newActivityData.id])
+        })
+      }
+    }
+  }, [state.savedActivities])
 
   
   const fetchUserData = async () => {

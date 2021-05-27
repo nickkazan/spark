@@ -113,7 +113,8 @@ export default function ChosenItem({navigation, route}) {
   }
 
   const saveActivityToProfile = async () => {
-    let savedActivities = await storeActivity(data.id)
+    const username = JSON.parse(state.userData).username
+    let savedActivities = await storeActivity(username, data.id)
     dispatch(saveActivities(savedActivities))
   }
 
