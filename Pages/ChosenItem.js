@@ -119,7 +119,9 @@ export default function ChosenItem({navigation, route}) {
   }
 
   const removeActivityFromProfile = async () => {
-    let savedActivities = await deleteActivity(data.id)
+    const username = JSON.parse(state.userData).username
+    let savedActivities = await deleteActivity(username, data.id)
+    console.log("NEW ", savedActivities)
     dispatch(deleteActivityById(savedActivities))
     navigation.navigate('Profile')
   }
@@ -152,7 +154,6 @@ export default function ChosenItem({navigation, route}) {
         <StyledButtonRow>
           <Tool name="phone" onPress={() => openPhone()}/>
           <Tool name="earth" onPress={() => openWebsite()}/>
-          {/* Add directions with Google Maps / Apple Maps */}
           <Tool name="directions-fork" onPress={() => openDirections()}/>
           {
             saved ? 

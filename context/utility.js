@@ -169,7 +169,7 @@ export const storeActivity = async (username, activityId) => {
   return savedActivities
 }
 
-export const deleteActivity = async (activityId) => {
+export const deleteActivity = async (username, activityId) => {
   let savedActivities = []
   try { 
     const currentSavedActivities =  await SecureStore.getItemAsync('savedActivitiesIds')
@@ -182,6 +182,22 @@ export const deleteActivity = async (activityId) => {
   if (savedActivities.includes(activityId)) {
     savedActivities.splice(savedActivities.indexOf(activityId), 1)
     await SecureStore.setItemAsync('savedActivitiesIds', JSON.stringify(savedActivities))  
+
+    fetch('http://192.168.1.67:8080/delete-activity', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },      
+      body: JSON.stringify({username, activityId})
+    })
+    .then((response) => {
+      response.json().then((data) => {
+        console.log(data)
+      });
+    })
+    .catch((error) => {
+      console.error(error)
+    });
   }
   return savedActivities
 }

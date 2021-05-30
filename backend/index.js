@@ -109,9 +109,8 @@ app.get("/business-id-lookup/:id", (req, res) => {
 });
 
 app.post("/put-activity", async (req, res) => {
-  console.log("HIT")
-  const body = req.body;
-  console.log(body)
+  console.log("Entered /put-activity API endpoint...")
+  const body = req.body
   if (body && body.username && body.activityId) {
     await activityDao.putActivity(body.username, body.activityId)
     res.status(200).json({
@@ -125,7 +124,7 @@ app.post("/put-activity", async (req, res) => {
 });
 
 app.get("/get-activities/:username", async (req, res) => {
-  console.log("Entered API endpoint...")
+  console.log("Entered /get-activities API endpoint...")
   const username = req.params.username
   if (username) {
     const response = await activityDao.getActivities(username)
@@ -133,6 +132,21 @@ app.get("/get-activities/:username", async (req, res) => {
   } else {
     res.status(400).json({
       error: "The activities failed to retrieve"
+    })
+  }
+})
+
+app.delete("/delete-activity", async (req, res) => {
+  console.log("Entered /delete-activity API endpoint...")
+  const body = req.body
+  if (body && body.username && body.activityId) {
+    await activityDao.deleteActivity(body.username, body.activityId)
+    res.status(200).json({
+      success: "The activity was deleted"
+    })
+  } else {
+    return res.status(400).json({
+      error: "The activity failed to delete"
     })
   }
 })

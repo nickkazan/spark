@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import styled from '../node_modules/styled-components/native';
-import { FlatList, Button, Image } from 'react-native';
+import { FlatList } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import ResultingItem from '../components/ResultingItem';
 import Colors from '../styles/Colors';
@@ -94,7 +94,7 @@ export default function Profile({ navigation }) {
     if (firstRender.current) {
       firstRender.current = false
       return
-    } else {
+    } else if (state.savedActivities.length >= activityIdsAlreadyAdded.length) {
       const newIds = state.savedActivities.slice(activityIdsAlreadyAdded.length)
       for (const id of newIds) {
         getSavedActivityById(id).then((newActivityData) => {
@@ -102,6 +102,17 @@ export default function Profile({ navigation }) {
           setActivityIdsAlreadyAdded([...activityIdsAlreadyAdded, newActivityData.id])
         })
       }
+    } else {
+      // We must have deleted an activity from state.savedActivities
+      setActivityIdsAlreadyAdded(state.savedActivities)
+      let newSavedActivities = savedActivities
+      newSavedActivities.forEach((activity, index) => {
+        if (!state.savedActivities.includes(activity.id)) {
+          console.log(`Removing ID: ${activity.id}...`)
+          newSavedActivities.splice(index, 1)
+        }
+      })
+      setSavedActivities(newSavedActivities)
     }
   }, [state.savedActivities])
 
