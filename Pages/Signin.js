@@ -64,7 +64,8 @@ export default function Signin({ navigation }) {
     try {
       await Auth.signIn(username, password)
       const {userToken, userData} = await storeSignInData()
-      savedActivitiesIds = parseSavedActivities(await getSavedActivitiesFromDynamo(JSON.parse(userData)['username']))
+      console.log(userData.username)
+      let savedActivitiesIds = parseSavedActivities(await getSavedActivitiesFromDynamo(userData.username))
       storeActivitiesFromDynamo(savedActivitiesIds)
       dispatch(signIn(userToken, userData, savedActivitiesIds))
     } catch (error) {

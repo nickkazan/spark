@@ -118,11 +118,11 @@ export default function Profile({ navigation }) {
 
   
   const fetchUserData = async () => {
-    const parsedUserData = JSON.parse(state.userData)
-    setFirstName(parsedUserData['firstName'])
-    setLastName(parsedUserData['lastName'])
-    setEmail(parsedUserData['email'])
-    setUsername(parsedUserData['username'])
+    console.log(state)
+    setFirstName(state.userData.firstName)
+    setLastName(state.userData.lastName)
+    setEmail(state.userData.email)
+    setUsername(state.userData.username)
     setProfilePicture(state.profilePicture)
   }
 

@@ -165,7 +165,7 @@ export default function Swipe(props, { navigation }) {
 
   useEffect(() => {
     if (activityToSave.length > 0) {
-      const username = JSON.parse(state.userData).username
+      const username = state.userData.username
       storeActivity(username, activityToSave).then((savedActivities) => {
         dispatch(saveActivities(savedActivities))
       })
@@ -178,7 +178,7 @@ export default function Swipe(props, { navigation }) {
         const dataBeforeStringify = {"latitude": position.coords.latitude, "longitude": position.coords.longitude}
         const data = JSON.stringify(dataBeforeStringify)
 
-        fetch('http://192.168.1.67:8080/swipe-activities', {
+        fetch('http://Spark-server-env.eba-k59bmuhp.us-east-2.elasticbeanstalk.com/swipe-activities', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

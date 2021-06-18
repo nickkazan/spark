@@ -15,7 +15,7 @@ export const stateReducer = (state, action) => {
     case actionTypes.RESTORE_TOKEN:
       return {
         ...state,
-        isSignedIn: true,
+        isSignedIn: action.isSignedIn,
         userToken: action.userToken,
         userData: action.userData,
         savedActivities: action.savedActivities,

@@ -8,8 +8,9 @@ export const actionTypes = {
   DELETE_ACTIVITY: 'DELETE_ACTIVITY'
 };
 
-export const restoreToken = (userToken, userData, savedActivities, colorMode, profilePicture) => ({
+export const restoreToken = (isSignedIn, userToken, userData, savedActivities, colorMode, profilePicture) => ({
   type: actionTypes.RESTORE_TOKEN,
+  isSignedIn,
   userToken,
   userData,
   savedActivities,

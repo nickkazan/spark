@@ -113,13 +113,13 @@ export default function ChosenItem({navigation, route}) {
   }
 
   const saveActivityToProfile = async () => {
-    const username = JSON.parse(state.userData).username
+    const username = state.userData.username
     let savedActivities = await storeActivity(username, data.id)
     dispatch(saveActivities(savedActivities))
   }
 
   const removeActivityFromProfile = async () => {
-    const username = JSON.parse(state.userData).username
+    const username = state.userData.username
     let savedActivities = await deleteActivity(username, data.id)
     console.log("NEW ", savedActivities)
     dispatch(deleteActivityById(savedActivities))

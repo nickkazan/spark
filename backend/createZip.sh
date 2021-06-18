@@ -1,0 +1,1 @@
+zip spark-server-code.zip ./package.json ./server.js ./activityDao.js

@@ -4,7 +4,7 @@ const ck = require("ckey")
 const axios = require('axios')
 const activityDao = require("./activityDao")
 
-const PORT = 8080
+const PORT = process.env.PORT || 8080;
 const SEARCH_URL =  "https://api.yelp.com/v3/businesses/search"
 const BUSINESS_ID_URL = "https://api.yelp.com/v3/businesses/"
 const API_KEY = ck.YELP_API_KEY
@@ -44,11 +44,15 @@ app.post("/resulting-activities", (req, res) => {
     const listOfActivities = response.data.businesses
 
     if (userChosenLimit >= listOfActivities.length) {
-      res.send(JSON.stringify(listOfActivities))
+      res.status(200).json(
+        listOfActivities
+      )
     }
     const newListOfActivities = (listOfActivities.sort(() => Math.random() - 0.5)).slice(0, userChosenLimit)
-    res.send(JSON.stringify(newListOfActivities))
-  })
+    res.status(200).json(
+      newListOfActivities
+    )
+})
   .catch((err) => {
     console.error(err.response)
   })
@@ -84,7 +88,9 @@ app.post("/swipe-activities", (req, res) => {
   .then((response) => {
     const listOfActivities = response.data.businesses
     const newListOfActivities = (listOfActivities.sort(() => Math.random() - 0.5))
-    res.send(JSON.stringify(newListOfActivities))
+    res.status(200).json(
+      newListOfActivities
+    )
   })
   .catch((err) => {
     console.error(err.response)
@@ -101,7 +107,9 @@ app.get("/business-id-lookup/:id", (req, res) => {
     },
   })
   .then((response) => {
-    res.send(JSON.stringify(response.data))
+    res.status(200).json(
+      response.data
+    )
   })
   .catch((err) => {
     console.error(err.response)

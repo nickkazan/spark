@@ -1,4 +1,4 @@
-import { FlatList, SafeAreaView } from 'react-native';
+import { FlatList } from 'react-native';
 import React from '../node_modules/react';
 import styled from '../node_modules/styled-components/native';
 import ResultingItem from '../components/ResultingItem';
@@ -22,23 +22,21 @@ export default function Results({ navigation, route }) {
 
   return (
     <StyledContainer style={{backgroundColor: color.background}}>
-      <SafeAreaView>
-        <FlatList
-          data={route.params.data}
-          renderItem={({ item }) => (
-            <ResultingItem
-              name={item.name}
-              price={item.price}
-              image={item.image_url}
-              rating={item.rating.toString()}
-              review_count={item.review_count.toString()}
-              address={item.location.address1}
-              onPress={() => selectItem(item)}
-            />
-          )}
-          keyExtractor={item => item.id}
-        />
-      </SafeAreaView>
+      <FlatList
+        data={route.params.data}
+        renderItem={({ item }) => (
+          <ResultingItem
+            name={item.name}
+            price={item.price}
+            image={item.image_url}
+            rating={item.rating.toString()}
+            review_count={item.review_count.toString()}
+            address={item.location.address1}
+            onPress={() => selectItem(item)}
+          />
+        )}
+        keyExtractor={item => item.id}
+      />
     </StyledContainer>
   )
 }

@@ -27,7 +27,11 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    dispatch(restoreToken(fullUserData.userToken, fullUserData.userData, fullUserData.savedActivities, fullUserData.colorMode, fullUserData.profilePicture))
+    let isSignedIn = false
+    if (fullUserData.userData) {
+      isSignedIn = true
+    }
+    dispatch(restoreToken(isSignedIn, fullUserData.userToken, fullUserData.userData, fullUserData.savedActivities, fullUserData.colorMode, fullUserData.profilePicture))
   }, [fullUserData])
 
   return (

@@ -170,7 +170,7 @@ export default function Home({navigation}) {
       const data = JSON.stringify(dataBeforeStringify)
       console.log("DATA: ", data)
       
-      fetch('http://192.168.1.67:8080/resulting-activities', {
+      fetch('http://Spark-server-env.eba-k59bmuhp.us-east-2.elasticbeanstalk.com/resulting-activities', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

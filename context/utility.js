@@ -1,6 +1,8 @@
 import { Auth } from 'aws-amplify';
 import * as SecureStore from 'expo-secure-store';
 
+const DEFAULT_URL = "http://Spark-server-env.eba-k59bmuhp.us-east-2.elasticbeanstalk.com/"
+
 export const getUserData = async () => {
   let userToken
   let userData
@@ -9,10 +11,10 @@ export const getUserData = async () => {
   let profilePicture
   try {
     userToken = await SecureStore.getItemAsync('userToken')
-    userData = await SecureStore.getItemAsync('userData')
+    userData = JSON.parse(await SecureStore.getItemAsync('userData'))
     savedActivities = JSON.parse(await SecureStore.getItemAsync('savedActivitiesIds'))
     colorMode = await SecureStore.getItemAsync('colorMode')
-    profilePicture = await SecureStore.getItemAsync('profilePicture')
+    profilePicture = JSON.parse(await SecureStore.getItemAsync('profilePicture'))
   } catch (e) {
     console.log("failed to find user data locally")
   }
@@ -25,13 +27,14 @@ export const logUserOutOfAccount = async () => {
     await SecureStore.deleteItemAsync('userData')
     await SecureStore.deleteItemAsync('savedActivitiesIds')
     await SecureStore.deleteItemAsync('profilePicture')
+    console.log("------DELETED ALL USER DATA LCOALLY-----")
   } catch (e) {
     console.log("failed to delete local user information")
   }
 }
 
 export const getSavedActivitiesFromDynamo = async (username) => {
-  const URL = "http://192.168.1.67:8080/get-activities/" + username
+  const URL = DEFAULT_URL + "get-activities/" + username
   return new Promise((resolve, reject) => {
     fetch(URL, {
       method: 'GET',
@@ -53,7 +56,7 @@ export const getSavedActivitiesFromDynamo = async (username) => {
 
 export const getSavedActivities = async () => {
   const requestData = async (id) => {
-    let URL = "http://192.168.1.67:8080/business-id-lookup/" + id
+    let URL = DEFAULT_URL + "business-id-lookup/" + id
 
     return new Promise((resolve, reject) => {
       fetch(URL, {
@@ -90,7 +93,7 @@ export const getSavedActivities = async () => {
 
 export const getSavedActivityById = async (id) => {
   console.log(`Grabbing data for ${id}...`)
-  let URL = "http://192.168.1.67:8080/business-id-lookup/" + id
+  let URL = DEFAULT_URL + "business-id-lookup/" + id
   return new Promise((resolve, reject) => {
     fetch(URL, {
       method: 'GET',
@@ -124,12 +127,15 @@ export const storeSignInData = async () => {
   const lastName = userData['family_name']
   const email = userData['email']
   const username = userData['cognito:username']
-  const userToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
+  const userToken = JSON.stringify((await Auth.currentSession()).getAccessToken().getJwtToken());
   const formattedUserData = JSON.stringify({firstName, lastName, email, username})
   await SecureStore.setItemAsync('userToken', userToken)
   await SecureStore.setItemAsync('userData', formattedUserData)
 
-  return {userToken, userData: formattedUserData}
+  console.log("------USER DATA WAS STORED------")
+  console.log(await SecureStore.getItemAsync('userToken'))
+
+  return {userToken, userData: {firstName, lastName, email, username}}
 };
 
 export const storeActivitiesFromDynamo = async (savedActivitiesIds) => {
@@ -150,19 +156,18 @@ export const storeActivity = async (username, activityId) => {
   if (!savedActivities.includes(activityId)) {
     savedActivities.push(activityId)
     SecureStore.setItemAsync('savedActivitiesIds', JSON.stringify(savedActivities))
-    fetch('http://192.168.1.67:8080/put-activity', {
+    const URL = DEFAULT_URL + "put-activity"
+    fetch(URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },      
       body: JSON.stringify({username, activityId})
     })
-    .then((response) => {
-      response.json().then((data) => {
-        console.log(data)
-      });
+    .then(response => {
+      console.log("RESULT: ", JSON.stringify(response))
     })
-    .catch((error) => {
+    .catch(error => {
       console.error(error)
     });
   }
@@ -183,7 +188,8 @@ export const deleteActivity = async (username, activityId) => {
     savedActivities.splice(savedActivities.indexOf(activityId), 1)
     await SecureStore.setItemAsync('savedActivitiesIds', JSON.stringify(savedActivities))  
 
-    fetch('http://192.168.1.67:8080/delete-activity', {
+    const URL = DEFAULT_URL + "delete-activity"
+    fetch(URL, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
