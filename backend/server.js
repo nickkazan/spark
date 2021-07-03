@@ -1,8 +1,9 @@
 const express = require("express")
 require("dotenv").config()
 const ck = require("ckey")
-const axios = require('axios')
+const axios = require("axios")
 const activityDao = require("./activityDao")
+const imageDao = require("./imageDao")
 
 const PORT = process.env.PORT || 8080;
 const SEARCH_URL =  "https://api.yelp.com/v3/businesses/search"
@@ -136,7 +137,9 @@ app.get("/get-activities/:username", async (req, res) => {
   const username = req.params.username
   if (username) {
     const response = await activityDao.getActivities(username)
-    res.status(200).send(response)
+    res.status(200).json({
+      response: response
+    })
   } else {
     res.status(400).json({
       error: "The activities failed to retrieve"
@@ -158,6 +161,38 @@ app.delete("/delete-activity", async (req, res) => {
     })
   }
 })
+
+app.post("/upload-profile-picture", async (req, res) => {
+  console.log("Entered /upload-profile-picture API endpoint...")
+  const body = req.body
+  if (body && body.username && body.imageData) {
+    await imageDao.storeProfilePicture(body.username, body.imageData)
+    res.status(200).json({
+      success: "The profile picture was uploaded"
+    })
+  } else {
+    return res.status(400).json({
+      error: "The profile picture failed to upload"
+    })
+  }
+})
+
+app.get("/get-profile-picture/:username", async (req, res) => {
+  console.log("Entered /get-profile-picture API endpoint...")
+  const username = req.params.username
+  if (username) {
+    const response = await imageDao.getProfilePicture(username)
+    console.log("RES: ", response)
+    res.status(200).json({
+      data: response
+    })
+  } else {
+    return res.status(400).json({
+      error: "The profile picture failed to retrieve"
+    })
+  }
+})
+
 
 app.listen(PORT, () => {
   console.log("Server is listening on port: ", PORT)

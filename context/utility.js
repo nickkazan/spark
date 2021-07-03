@@ -14,7 +14,7 @@ export const getUserData = async () => {
     userData = JSON.parse(await SecureStore.getItemAsync('userData'))
     savedActivities = JSON.parse(await SecureStore.getItemAsync('savedActivitiesIds'))
     colorMode = await SecureStore.getItemAsync('colorMode')
-    profilePicture = JSON.parse(await SecureStore.getItemAsync('profilePicture'))
+    profilePicture = await SecureStore.getItemAsync('profilePicture')
   } catch (e) {
     console.log("failed to find user data locally")
   }
@@ -114,8 +114,43 @@ export const saveColorMode = async (colorMode) => {
   await SecureStore.setItemAsync('colorMode', colorMode)
 }
 
-export const saveProfilePicture = async (profilePicture) => {
-  await SecureStore.setItemAsync('profilePicture', profilePicture)
+export const saveProfilePicture = async (username, imageData) => {
+  await SecureStore.setItemAsync('profilePicture', imageData)
+  const URL = DEFAULT_URL + "upload-profile-picture"
+  fetch(URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },      
+    body: JSON.stringify({username, imageData})
+  })
+  .then(response => {
+    console.log("RESULT: ", JSON.stringify(response))
+  })
+  .catch(error => {
+    console.error(error)
+  });
+}
+
+export const getProfilePicture = async (username) => {
+  console.log(`Grabbing profile picture for ${username}...`)
+  let URL = DEFAULT_URL + "get-profile-picture/" + username
+  return new Promise((resolve, reject) => {
+    fetch(URL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      response.json().then((data) => {
+        resolve(data)
+      });
+  }).catch((error) => {
+      console.error(error)
+      reject(error)
+    });
+  })
+
 }
 
 export const storeSignInData = async () => {

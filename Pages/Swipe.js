@@ -113,7 +113,6 @@ export default function Swipe(props, { navigation }) {
             restSpeedThreshold: 100,
             restDisplacementThreshold: 40
           }).start(() => {
-            // saveActivityToProfile()
             setCurrentIndex(currentIndex => {
               setActivities(activities => {
                 setActivityToSave(activities[currentIndex].id)
@@ -146,7 +145,6 @@ export default function Swipe(props, { navigation }) {
 
   useEffect(() => {
     grabUserLongitudeAndLatitude()
-    console.log(activities[0])
   }, [])
 
   useEffect(() => {

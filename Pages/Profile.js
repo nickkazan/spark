@@ -8,7 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import AuthContext from '../context/auth-context.js';
 import { changeProfilePicture } from '../context/actions';
-import { getSavedActivities, getSavedActivityById, saveProfilePicture } from '../context/utility.js';
+import { getSavedActivities, getSavedActivityById, saveProfilePicture, getProfilePicture } from '../context/utility.js';
 
 const IMAGE_DIMENSIONS = 125
 
@@ -118,12 +118,18 @@ export default function Profile({ navigation }) {
 
   
   const fetchUserData = async () => {
-    console.log(state)
     setFirstName(state.userData.firstName)
     setLastName(state.userData.lastName)
     setEmail(state.userData.email)
     setUsername(state.userData.username)
-    setProfilePicture(state.profilePicture)
+    if (!state.profilePicture && state.userData.username) {
+      let profilePictureFromS3 = await getProfilePicture(state.userData.username)
+      let base64Image = profilePictureFromS3.data
+      let profilePictureFormatted = `data:image/png;base64,${base64Image}`
+      setProfilePicture(profilePictureFormatted)
+    } else {
+      setProfilePicture(state.profilePicture)
+    }
   }
 
   const selectItem = (itemData) => {
@@ -138,8 +144,9 @@ export default function Profile({ navigation }) {
 
     if (!response.cancelled) {
       setProfilePicture(response.uri)
+      console.log(response.uri)
       dispatch(changeProfilePicture(response.uri))
-      saveProfilePicture(response.uri)
+      saveProfilePicture(username, response.uri)
     }
   };
 

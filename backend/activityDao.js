@@ -68,7 +68,7 @@ async function deleteActivity(username, activityId) {
   client.delete(params, function (err, data) {
     if (err) {
       console.error(
-        "Unable to delete item. Error JSON:",
+        "Unable to delete item. Error JSON: ",
         JSON.stringify(err, null, 2)
       );
     } else {
