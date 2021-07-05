@@ -55,6 +55,7 @@ export default function Signin({ navigation }) {
   const handleSignIn = async (username, password) => {
     const parseSavedActivities = (savedActivities) => {
       let activityIds = []
+      console.log("SA: ", savedActivities)
       savedActivities.forEach(item => {
         activityIds.push(item.activity_id)
       })
@@ -65,7 +66,7 @@ export default function Signin({ navigation }) {
       await Auth.signIn(username, password)
       const {userToken, userData} = await storeSignInData()
       console.log(userData.username)
-      let savedActivitiesIds = parseSavedActivities(await getSavedActivitiesFromDynamo(userData.username))
+      let savedActivitiesIds = parseSavedActivities((await getSavedActivitiesFromDynamo(userData.username)).response)
       storeActivitiesFromDynamo(savedActivitiesIds)
       dispatch(signIn(userToken, userData, savedActivitiesIds))
     } catch (error) {

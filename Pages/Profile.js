@@ -116,6 +116,11 @@ export default function Profile({ navigation }) {
     }
   }, [state.savedActivities])
 
+  const formatBase64Image = (base64ImageData) => {
+    // might need logic to check image type at some point
+    return `data:image/png;base64,${base64ImageData}`
+  }
+
   
   const fetchUserData = async () => {
     setFirstName(state.userData.firstName)
@@ -125,9 +130,10 @@ export default function Profile({ navigation }) {
     if (!state.profilePicture && state.userData.username) {
       let profilePictureFromS3 = await getProfilePicture(state.userData.username)
       let base64Image = profilePictureFromS3.data
-      let profilePictureFormatted = `data:image/png;base64,${base64Image}`
-      setProfilePicture(profilePictureFormatted)
+      setProfilePicture(base64Image)
+      dispatch(changeProfilePicture(base64Image))
     } else {
+      console.log(state.profilePicture)
       setProfilePicture(state.profilePicture)
     }
   }
@@ -139,14 +145,17 @@ export default function Profile({ navigation }) {
   const handleChoosePhoto = async () => {
     let response = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true
+      allowsEditing: true,
+      quality: 0,
+      base64: true,
+      aspect: [4, 3]
     })
 
     if (!response.cancelled) {
-      setProfilePicture(response.uri)
-      console.log(response.uri)
-      dispatch(changeProfilePicture(response.uri))
-      saveProfilePicture(username, response.uri)
+      const profilePictureFormatted = formatBase64Image(response.base64)
+      setProfilePicture(profilePictureFormatted)
+      dispatch(changeProfilePicture(profilePictureFormatted))
+      saveProfilePicture(username, response.uri, profilePictureFormatted)
     }
   };
 

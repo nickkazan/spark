@@ -22,6 +22,7 @@
     "dotenv": "^8.2.0",
     "expo": "~40.0.0",
     "expo-blur": "~8.2.2",
+    "expo-file-system": "~9.3.0",
     "expo-image-picker": "^10.1.4",
     "expo-linear-gradient": "~8.4.0",
     "expo-secure-store": "^9.3.0",

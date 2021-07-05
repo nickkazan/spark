@@ -12,7 +12,8 @@ const API_KEY = ck.YELP_API_KEY
 
 
 const app = express()
-app.use(express.json());
+app.use(express.json({limit: '25mb'}));
+app.use(express.urlencoded({limit: '25mb'}));
 
 app.post("/resulting-activities", (req, res) => {
   const body = req.body
@@ -182,7 +183,6 @@ app.get("/get-profile-picture/:username", async (req, res) => {
   const username = req.params.username
   if (username) {
     const response = await imageDao.getProfilePicture(username)
-    console.log("RES: ", response)
     res.status(200).json({
       data: response
     })

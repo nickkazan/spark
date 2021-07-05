@@ -24,7 +24,8 @@ async function storeProfilePicture(username, imageData) {
     } else {
       console.log(
         "Profile picture uploaded. Data: ",
-        JSON.stringify(data, null, 2))
+        JSON.stringify(data, null, 2)
+      )
     }
   })
 }
@@ -36,9 +37,8 @@ async function getProfilePicture(username) {
   const data = await s3.getObject(params).promise()
   
   if (data) {
-    console.log(`Found the following data for ${username}`)
-    console.log(data.Body.toString('base64'))
-    return data.Body.toString('base64')
+    console.log(`Found data for @${username}`)
+    return data.Body.toString()
   } else {
     console.error("Unable to upload new profile picture.")
   }

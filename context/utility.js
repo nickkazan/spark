@@ -114,8 +114,8 @@ export const saveColorMode = async (colorMode) => {
   await SecureStore.setItemAsync('colorMode', colorMode)
 }
 
-export const saveProfilePicture = async (username, imageData) => {
-  await SecureStore.setItemAsync('profilePicture', imageData)
+export const saveProfilePicture = async (username, imageFile, imageData) => {
+  await SecureStore.setItemAsync('profilePicture', imageFile)
   const URL = DEFAULT_URL + "upload-profile-picture"
   fetch(URL, {
     method: 'POST',
@@ -150,7 +150,6 @@ export const getProfilePicture = async (username) => {
       reject(error)
     });
   })
-
 }
 
 export const storeSignInData = async () => {
